@@ -1,0 +1,12 @@
+{
+  "name": "ao",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "amalg.lua -o process/build/output.lua -s process/handlers.lua process.handlers process.lib.db process.lib.patterns"
+  },
+  "author": "",
+  "license": "ISC"
+}
