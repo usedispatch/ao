@@ -7,5 +7,3 @@ DbAdmin:exec("create table test1 (name text);")
 -- DbAdmin:exec("insert into test1 values('apple');")
 -- DbAdmin:exec("select * from test1;")
 -- DbAdmin:count("test1")
-
-Handlers.add("GetTestData", getTestDataPattern, getTestData)

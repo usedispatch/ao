@@ -8,6 +8,7 @@ end
 local output = {}
 
 -- Add the content of each file
+table.insert(output, readFile("process/lib/init.lua"))
 table.insert(output, readFile("process/lib/db.lua"))
 table.insert(output, readFile("process/lib/patterns.lua"))
 table.insert(output, readFile("process/handlers.lua"))

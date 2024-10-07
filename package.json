@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "amalg.lua -o process/build/output.lua -s process/handlers.lua process.handlers process.lib.db process.lib.patterns"
+    "build": "amalg.lua -o process/build/output.lua -s process/init.lua process.utils.index process.lib.db process.lib.patterns process.lib.processor "
   },
   "author": "",
   "license": "ISC"

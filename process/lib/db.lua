@@ -12,6 +12,6 @@ function getTestData(msg)
 		  print(row.name)
 	  end
     print('GetTestData Done!')
-    -- local data = json.encode(results)
-    Handlers.utils.reply(json.encode(results))(msg)
+    local data = json.encode(results)
+    return data
   end
