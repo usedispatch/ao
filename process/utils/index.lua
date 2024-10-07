@@ -1,4 +1,6 @@
 
 function sendReply(msg, data)
-    Handlers.utils.reply(data)(msg)
+    print(data)
+    print('sendReply')
+    msg.reply({Data = "data"})
 end
