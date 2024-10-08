@@ -13,3 +13,4 @@
 **/build/*
 amalg.cache
 .vscode
+node_modules/*

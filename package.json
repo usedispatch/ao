@@ -4,9 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "amalg.lua -o process/build/output.lua -s process/init.lua  process.lib.processor process.lib.db process.lib.patterns process.utils.index process.lib.handlers"
+    "test": "FORMAT=wasm32-unknown-emscripten2 WASM=./AOS-SQLITE.wasm node --experimental-wasm-memory64 -r ts-node/register test/*.test.ts",
+    "build": "lua process/scripts/build.lua",
+    "test:sqlite": "FORMAT=wasm32-unknown-emscripten2 WASM=./AOS-SQLITE.wasm ts-node test/**/*.test.ts"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@permaweb/ao-loader": "^0.0.38",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
+    "ts-node": "^10.9.2"
+  }
 }

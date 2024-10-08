@@ -1,3 +1,3 @@
 
 
-Handlers.add("GetTestData", "GetTestData", getTestDataProcessor)
+Handlers.add("GetTestData", getTestDataProcessor)
