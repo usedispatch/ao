@@ -17,3 +17,14 @@ function getPostsProcessor(msg)
 end
 
 
+function addProfileProcessor(msg)
+    local data = json.decode(msg.Data)
+    addProfile(data)
+    sendReply(msg, data)
+end
+
+function getProfilesProcessor(msg)
+    local data = getProfiles(msg)
+    sendReply(msg, data)
+end
+
