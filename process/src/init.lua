@@ -26,6 +26,8 @@ function Configure()
     ]]
 
     DbAdmin:exec("create table test1 (name text);")
+    DbAdmin:exec("insert into test1 values('apple');")
+
     Configured = true
 end
 

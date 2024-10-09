@@ -11,9 +11,12 @@ myTests:add("test message", function()
 end)
 
 myTests:add("Create and Get Profile", function()
-    local addProfile = Send({Target = ao.id, Action = "AddProfile", Data = "{\"UserId\":\"test1\", \"DisplayName\":\"test1\"}"})
+    local userId = "test" .. math.random(1, 1000)
+    local displayName = "test" .. math.random(1, 1000)
+    local addProfile = Send({Target = ao.id, Action = "AddProfile", Data = "{\"UserId\":\"" .. userId .. "\", \"DisplayName\":\"" .. displayName .. "\"}"}).receive()
     local getProfile = Send({Target = ao.id, Action = "GetProfiles"}).receive().Data
-    assert(getProfile == "[{\"UserId\":\"test1\",\"DisplayName\":\"test1\"}]", "GetTestData action failed")
+    local expectedProfile = "[{\"UserId\":\"" .. userId .. "\",\"DisplayName\":\"" .. displayName .. "\"}]"
+    assert(string.find(getProfile, expectedProfile) ~= nil, "GetProfiles action failed to include the newly added data")
 end)
 
 -- myTests:run()

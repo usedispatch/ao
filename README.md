@@ -1,23 +1,22 @@
 # ao
 # Steps
+Split this way for simple debugging via AoLink
 ###
+## 1
+```
 .editor
 .load-blueprint apm
 apm.install "@rakis/DbAdmin"
 apm.install "@rakis/test-unit"
 .done
-###
+```
+## 2
+Wait for install...
+```
 .editor
-sqlite3 = require("lsqlite3")
-DB = DB or sqlite3.open_memory()
-DbAdmin = require('@rakis/DbAdmin').new(DB)
-
-DbAdmin:exec("insert into test1 values('apple');")
-.done
-###
 .load process/build/output.lua
-###
-.editor
 .load test/tests.lua
-myTests:run()
 .done
+```
+## 3
+`myTests:run()`
