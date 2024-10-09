@@ -1,6 +1,33 @@
 local sqlite3 = require("lsqlite3")
-local DB = DB or sqlite3.open_memory()
-local DbAdmin = require('@rakis/DbAdmin').new(DB)
+local Db = Db or sqlite3.open_memory()
+local DbAdmin = require('@rakis/DbAdmin').new(Db)
+local json    = require("json")
+
+function Configure()
+
+    dbAdmin:exec[[
+    CREATE TABLE Posts (
+        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Text TEXT NOT NULL,
+        Cid TEXT NOT NULL,
+        ReplyCid TEXT,
+        ReplyUri TEXT,
+        CreatedAt TEXT NOT NULL,
+        Creator TEXT NOT NULL
+    );
+    ]]
+
+    dbAdmin:exec[[
+    CREATE TABLE Profiles (
+        UserId TEXT PRIMARY KEY,
+        DisplayName TEXT NOT NULL
+    );
+    ]]
+
+    Configured = true
+end
+
+if not Configured then Configure() end
 
 
 -- DbAdmin:exec("create table test1 (name text);")
