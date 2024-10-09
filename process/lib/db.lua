@@ -41,13 +41,6 @@ function addPost(data)
   --   print("Error: Missing required fields in message")
   -- return
 
-  print(data.Text)
-  print(data.Cid)
-  print(data.ReplyCid)
-  print(data.ReplyUri)
-  print(data.CreatedAt)
-  print(data.Creator)
-
   dbAdmin:apply('INSERT INTO Posts (Id,Text, Cid, ReplyCid, ReplyUri, CreatedAt, Creator) VALUES (NULL,?, ?, ?, ?, ?, ?)', {
     data.Text,
     data.Cid,

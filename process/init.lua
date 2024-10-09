@@ -1,10 +1,11 @@
 local sqlite3 = require("lsqlite3")
 local json    = require("json")
+Db = sqlite3.open_memory()
+dbAdmin = require('@rakis/DbAdmin').new(Db)
 
 function Configure()
-    Db = sqlite3.open_memory()
-    dbAdmin = require('@rakis/DbAdmin').new(Db)
-
+    -- Db = sqlite3.open_memory()
+    -- dbAdmin = require('@rakis/DbAdmin').new(Db)
     dbAdmin:exec[[
     CREATE TABLE Posts (
         Id INTEGER PRIMARY KEY AUTOINCREMENT,
