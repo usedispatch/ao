@@ -13,6 +13,7 @@ table.insert(output, readFile("process/lib/db.lua"))
 table.insert(output, readFile("process/lib/patterns.lua"))
 table.insert(output, readFile("process/lib/processor.lua"))
 table.insert(output, readFile("process/lib/handlers.lua"))
+table.insert(output, readFile("process/utils/index.lua"))
 -- Write the combined content to output.lua
 local outFile = assert(io.open("process/build/output.lua", "w"))
 outFile:write(table.concat(output, "\n\n"))
