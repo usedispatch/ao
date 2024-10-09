@@ -1,16 +1,17 @@
 # ao
 # Steps
 ###
+.editor
 .load-blueprint apm
 apm.install "@rakis/DbAdmin"
 apm.install "@rakis/test-unit"
+.done
 ###
 .editor
 sqlite3 = require("lsqlite3")
 DB = DB or sqlite3.open_memory()
 DbAdmin = require('@rakis/DbAdmin').new(DB)
 
-DbAdmin:exec("create table test1 (name text);")
 DbAdmin:exec("insert into test1 values('apple');")
 .done
 ###
