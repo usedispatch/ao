@@ -2,5 +2,6 @@
 function sendReply(msg, data)
     print(data)
     print('sendReply')
-    msg.reply({Data = data, Action = msg.Action})
+
+    msg.reply({Data = data, Action = msg.Action .. "Response"})
 end
