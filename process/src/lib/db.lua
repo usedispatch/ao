@@ -5,12 +5,11 @@ local DbAdmin = require('@rakis/DbAdmin').new(DB)
 
 function getTestData(msg)
     print('>>> hello')
-    print(stmt)
     print(DbAdmin)
     local results = DbAdmin:exec("SELECT * FROM test1;")
     print("Query Results:")
     for foo, row in ipairs(results) do
-        return results
+      print(row.name)
     end
     print('GetTestData Done!')
     local data = json.encode(results)
