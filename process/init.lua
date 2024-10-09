@@ -1,9 +1,9 @@
 local sqlite3 = require("lsqlite3")
-local Db = Db or sqlite3.open_memory()
-local DbAdmin = require('@rakis/DbAdmin').new(Db)
 local json    = require("json")
 
 function Configure()
+    Db = sqlite3.open_memory()
+    dbAdmin = require('@rakis/DbAdmin').new(Db)
 
     dbAdmin:exec[[
     CREATE TABLE Posts (
