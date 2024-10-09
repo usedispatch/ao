@@ -15,6 +15,11 @@ table.insert(output, readFile("process/src/lib/patterns.lua"))
 table.insert(output, readFile("process/src/lib/processor.lua"))
 table.insert(output, readFile("process/src/lib/handlers.lua"))
 -- Write the combined content to output.lua
+local dir = "process/build"
+if not os.execute("ls process/build") then
+    print("Creating build directory")
+    os.execute("mkdir -p " .. dir)
+end
 local outFile = assert(io.open("process/build/output.lua", "w"))
 outFile:write(table.concat(output, "\n\n"))
 outFile:close()
