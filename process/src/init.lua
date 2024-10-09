@@ -1,6 +1,6 @@
-local sqlite3 = require("lsqlite3")
-local DB = DB or sqlite3.open_memory()
-local DbAdmin = require('@rakis/DbAdmin').new(DB)
+-- local sqlite3 = require("lsqlite3")
+-- local DB = DB or sqlite3.open_memory()
+-- local DbAdmin = require('@rakis/DbAdmin').new(DB)
 
 
 -- DbAdmin:exec("create table test1 (name text);")

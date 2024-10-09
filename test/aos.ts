@@ -21,7 +21,7 @@ interface OutputData {
 }
 
 export default class aos {
-  wasm = fs.readFileSync(path.join(__dirname) + "/../process.wasm");
+  wasm = fs.readFileSync(path.join(__dirname) + "/../process-sqlite.wasm");
   code: string;
   process_id: string;
   module_id: string;
@@ -51,6 +51,12 @@ export default class aos {
       format: "wasm64-unknown-emscripten-draft_2024_02_15",
     });
     const env = this.createEnv();
+    const msg2 = this.createMsg(".load-blueprint apm", [{ name: "Action", value: "Eval" }]);
+    const result2 = await this.handle(null, msg2, env);
+    console.log("result2", result2);
+    const msg3 = this.createMsg("apm.install \"@rakis/DbAdmin\"", [{ name: "Action", value: "Eval" }]);
+    const result3 = await this.handle(null, msg3, env);
+    console.log("result3", result3);
     const msg = this.createMsg(this.code, [{ name: "Action", value: "Eval" }]);
     const result = await this.handle(null, msg, env);
     console.log('result result result', result);
