@@ -1,6 +1,6 @@
 local sqlite3 = require("lsqlite3")
-local json    = require("json")
-DB = sqlite3.open_memory()
+local json = require("json")
+DB = DB or sqlite3.open_memory()
 DbAdmin = require('@rakis/DbAdmin').new(DB)
 
 function Configure()

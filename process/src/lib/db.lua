@@ -1,14 +1,5 @@
-
-
 function getTestData(msg)
-    print('>>> hello')
-    print(DbAdmin)
     local results = DbAdmin:exec("SELECT * FROM test1;")
-    print("Query Results:")
-    for foo, row in ipairs(results) do
-      print(row.name)
-    end
-    print('GetTestData Done!')
     local data = json.encode(results)
     return data
 end
@@ -16,12 +7,12 @@ end
 
 function getProfiles()
   local results = DbAdmin:exec("SELECT * FROM Profiles;")
-  return results
+  return json.encode(results)
 end
 
 function getPosts()
   local results = DbAdmin:exec("SELECT * FROM Posts;")
-  return results
+  return json.encode(results)
 end
 
 function addPost(data)

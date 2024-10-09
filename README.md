@@ -16,6 +16,8 @@ DbAdmin:exec("insert into test1 values('apple');")
 .done
 ###
 .load process/build/output.lua
-.load test/tests.lua
 ###
+.editor
+.load test/tests.lua
 myTests:run()
+.done
