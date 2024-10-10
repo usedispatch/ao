@@ -65,14 +65,14 @@ export async function addProfile(): Promise<void> {
   console.log("Result", res);
 }
 
-export async function addPost(): Promise<void> {
+export async function addPost(text: string): Promise<void> {
   const data = {
-    Text: "Hello World",
-    Cid: "dddffee",
-    ReplyCid: "ffrrtt",
-    ReplyUri: "gghhtt",
-    CreatedAt: "12-12-2034",
-    Creator: "Pratik",
+    Text: text,
+    Cid: "dddffee", // You may want to generate this dynamically
+    ReplyCid: "",
+    ReplyUri: "",
+    CreatedAt: new Date().toISOString(),
+    Creator: await getWalletAddress(),
   };
 
   const res = await message({
