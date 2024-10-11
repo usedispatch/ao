@@ -5,10 +5,14 @@ import { Button } from "@/components/ui/button";
 import { CreatePost } from "@/components/ui/CreatePost";
 import { PostFeed } from "@/components/ui/PostFeed";
 import { addProfile, connectArConnectWallet, getProfiles } from "@/lib/process";
+import SocialMediaApp from "@/components/social-app";
+import { CreateProfile } from "@/components/CreateProfile";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function Home() {
   const [isConnected, setIsConnected] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
+  const [isProfileCreated, setIsProfileCreated] = useState(false);
 
   useEffect(() => {
     checkWalletConnection();
@@ -40,13 +44,13 @@ export default function Home() {
 
   const handleAddProfile = async () => {
     console.log("Adding profile");
-    await addProfile();
+    await addProfile("123", "John Doe");
     setHasProfile(true);
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Welcome to the Permaweb</h1>
+    <div className=" mx-auto ">
+      {/* <h1 className="text-3xl font-bold mb-6">Welcome to the Permaweb</h1>
       {!isConnected && (
         <Button onClick={handleConnectWallet}>Connect Wallet</Button>
       )}
@@ -58,7 +62,25 @@ export default function Home() {
           <CreatePost />
         </>
       )}
-      <PostFeed />
+      <PostFeed /> */}
+      {/* <SocialMediaApp />
+       */}
+      <SocialMediaApp
+        isWalletConnected={isConnected}
+        handleConnectWallet={handleConnectWallet}
+      />
+      {/* {isProfileCreated ? (
+        <SocialMediaApp />
+      ) : (
+        <div className="flex justify-center items-center ">
+          <CreateProfile
+            isWalletConnected={isConnected}
+            handleConnectWallet={handleConnectWallet}
+            setIsProfileCreated={setIsProfileCreated}
+          />
+        </div>
+      )} */}
+      <Toaster />
     </div>
   );
 }

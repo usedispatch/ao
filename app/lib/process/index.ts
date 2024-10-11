@@ -46,10 +46,13 @@ export async function getPosts(): Promise<Post[]> {
   return JSON.parse(dryrunResult.Messages[0].Data);
 }
 
-export async function addProfile(): Promise<void> {
+export async function addProfile(
+  UserId: string,
+  DisplayName: string
+): Promise<string> {
   const data = {
-    UserId: "123",
-    DisplayName: "John Doe",
+    UserId: UserId,
+    DisplayName: DisplayName,
   };
   console.log("Sending Message");
   const res = await message({
@@ -64,9 +67,10 @@ export async function addProfile(): Promise<void> {
     data: JSON.stringify(data),
   });
   console.log("Result", res);
+  return res;
 }
 
-export async function addPost(text: string): Promise<void> {
+export async function addPost(text: string): Promise<string> {
   const data = {
     Text: text,
     Cid: "dddffee", // You may want to generate this dynamically
@@ -88,6 +92,7 @@ export async function addPost(text: string): Promise<void> {
     data: JSON.stringify(data),
   });
   console.log("Result", res);
+  return res;
 }
 
 export async function connectArConnectWallet() {
