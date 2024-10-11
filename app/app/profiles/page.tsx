@@ -7,15 +7,15 @@ export const metadata = {
 };
 const SPLX_LUA_AO = "Jp72YrAFtQNxYTmKDiUge5NkVtW-SS44cEpXdgMs8tg";
 
-interface Post {
-  Id: number;
-  Text: string;
-  Cid: string;
-  ReplyCid: string;
-  ReplyUri: string;
-  CreatedAt: string;
-  Creator: string;
-}
+// interface Post {
+//   Id: number;
+//   Text: string;
+//   Cid: string;
+//   ReplyCid: string;
+//   ReplyUri: string;
+//   CreatedAt: string;
+//   Creator: string;
+// }
 
 interface Profile {
   UserId: string;
