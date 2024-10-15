@@ -1,15 +1,25 @@
-import { dryrun } from '@permaweb/aoconnect';
-import { Suspense } from 'react';
+import { dryrun } from "@permaweb/aoconnect";
+import { Suspense } from "react";
 
 export const metadata = {
-  title: 'User Profiles',
-  description: 'View and manage user profiles',
+  title: "User Profiles",
+  description: "View and manage user profiles",
 };
 const SPLX_LUA_AO = "Jp72YrAFtQNxYTmKDiUge5NkVtW-SS44cEpXdgMs8tg";
 
+// interface Post {
+//   Id: number;
+//   Text: string;
+//   Cid: string;
+//   ReplyCid: string;
+//   ReplyUri: string;
+//   CreatedAt: string;
+//   Creator: string;
+// }
+
 interface Profile {
-  UserId: string,
-  DisplayName: string,
+  UserId: string;
+  DisplayName: string;
 }
 async function getProfiles(): Promise<Profile[]> {
   const dryrunResult = await dryrun({
