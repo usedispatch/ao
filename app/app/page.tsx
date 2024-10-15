@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { CreatePost } from "@/components/ui/CreatePost";
 import { PostFeed } from "@/components/ui/PostFeed";
 import { addProfile, connectArConnectWallet, getProfiles } from "@/lib/process";
-import SocialMediaApp from "@/components/social-app";
+
 import { CreateProfile } from "@/components/CreateProfile";
 import { Toaster } from "@/components/ui/toaster";
+import SocialMediaApp from "@/components/new-ui";
 
 export default function Home() {
   const [isConnected, setIsConnected] = useState(false);
@@ -69,6 +70,7 @@ export default function Home() {
         isWalletConnected={isConnected}
         handleConnectWallet={handleConnectWallet}
       />
+
       {/* {isProfileCreated ? (
         <SocialMediaApp />
       ) : (
