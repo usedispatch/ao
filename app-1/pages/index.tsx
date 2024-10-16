@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import { addProfile, connectArConnectWallet, getProfiles } from "@/lib/process";
 import { Toaster } from "@/components/ui/toaster";
 import SocialMediaApp from "@/components/new-ui";
+import { isArweave } from "@/arnext";
 
 export default function Home() {
   const [isConnected, setIsConnected] = useState(false);
@@ -79,3 +82,9 @@ export default function Home() {
     </div>
   );
 }
+
+async function _getStaticProps({}) {
+   return {  }
+ }
+ 
+ export const getStaticProps = isArweave ? null : _getStaticProps
