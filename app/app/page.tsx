@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { CreatePost } from "@/components/ui/CreatePost";
-import { PostFeed } from "@/components/ui/PostFeed";
+
 import { addProfile, connectArConnectWallet, getProfiles } from "@/lib/process";
 
 import { CreateProfile } from "@/components/CreateProfile";
