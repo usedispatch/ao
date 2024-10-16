@@ -42,6 +42,7 @@ export function ProfileCreationDialog({
       const address = await (
         globalThis as any
       ).arweaveWallet.getActiveAddress();
+      console.log("address", address);
       const hash = await addProfile(address, displayName);
       setIsLoading(false);
 
@@ -70,10 +71,12 @@ export function ProfileCreationDialog({
 
   return (
     <Dialog open={showProfileDialog} onOpenChange={setShowProfileDialog}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] bg-[#FAFAF8]">
         <DialogHeader>
-          <DialogTitle>Create Your Profile</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-[#141414]">
+            Create Your Profile
+          </DialogTitle>
+          <DialogDescription className="text-[#141414]/70">
             Join our community and start sharing your thoughts!
           </DialogDescription>
         </DialogHeader>
@@ -82,13 +85,16 @@ export function ProfileCreationDialog({
             <Input
               id="username"
               placeholder="Enter your username"
-              className="col-span-4"
+              className="col-span-4 bg-[#FAFAF8] text-[#141414] border-[#CE775A] focus:border-[#CE775A] focus:ring focus:ring-[#CE775A]/20"
               onChange={(e) => setDisplayName(e.target.value)}
             />
           </div>
         </div>
         <div className="flex justify-end">
-          <Button onClick={createProfileHandler}>
+          <Button
+            onClick={createProfileHandler}
+            className="bg-[#CE775A] text-[#FAFAF8] hover:bg-[#CE775A]/90"
+          >
             {isWalletConnected ? (
               isLoading ? (
                 <Spinner />

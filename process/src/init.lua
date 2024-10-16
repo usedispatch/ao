@@ -8,13 +8,15 @@ function Configure()
     -- dbAdmin = require('@rakis/DbAdmin').new(Db)
     DbAdmin:exec[[
     CREATE TABLE Posts (
-        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Id TEXT PRIMARY KEY UNIQUE,
         Text TEXT NOT NULL,
         Cid TEXT NOT NULL,
         ReplyCid TEXT,
         ReplyUri TEXT,
         CreatedAt TEXT NOT NULL,
-        Creator TEXT NOT NULL
+        Creator TEXT NOT NULL,
+        ParentId TEXT,
+        Likes INTEGER NOT NULL DEFAULT 0
     );
     ]]
 

@@ -19,14 +19,25 @@ function addPost(data)
   -- if not data then
   --   print("Error: Missing required fields in message")
   -- return
-
-  DbAdmin:apply('INSERT INTO Posts (Id,Text, Cid, ReplyCid, ReplyUri, CreatedAt, Creator) VALUES (NULL,?, ?, ?, ?, ?, ?)', {
+  print(data.Id)
+  print(data.Likes)
+  print(data.Text)
+  print(data.Cid)
+  print(data.ReplyCid)
+  print(data.ReplyUri)
+  print(data.CreatedAt)
+  print(data.Creator)
+  print(data.ParentId)
+  DbAdmin:apply('INSERT INTO Posts (Id,Text, Cid, ReplyCid, ReplyUri, CreatedAt, Creator,ParentId,Likes) VALUES (?,?, ?, ?, ?, ?, ?,?,?)', {
+    data.Id,
     data.Text,
     data.Cid,
     data.ReplyCid,
     data.ReplyUri,
     data.CreatedAt,
-    data.Creator
+    data.Creator,
+    data.ParentId,
+    data.Likes
   })
 end
 

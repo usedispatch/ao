@@ -38,8 +38,13 @@ import {
 } from "lucide-react";
 import { ProfileCreationDialog } from "./ProfileDialog";
 import { useDialogStore } from "@/hooks/useProfileDialog";
-import { getPosts } from "@/lib/process";
+import { addPost, getPosts, Post, Profile } from "@/lib/process";
 import Avvvatars from "avvvatars-react";
+import dynamic from "next/dynamic";
+import { useToast } from "@/hooks/use-toast";
+import PostComments from "./PostReply";
+
+const EditorComp = dynamic(() => import("./EditorComponent"), { ssr: false });
 
 const initialPosts = [
   {
@@ -90,21 +95,11 @@ type SocialMediaAppProps = {
   handleConnectWallet: () => void;
 };
 
-interface Post {
-  Id: number;
-  Text: string;
-  CreatedAt: string;
-  Creator: string;
-}
-
 export default function SocialMediaApp({
   isWalletConnected,
   handleConnectWallet,
 }: SocialMediaAppProps) {
-  const [profile, setProfile] = useState<{
-    DisplayName: string;
-    UserId: string;
-  } | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
   const [newPost, setNewPost] = useState("");
@@ -112,6 +107,9 @@ export default function SocialMediaApp({
   const [selectedPost, setSelectedPost] = useState(null);
   const [replyContent, setReplyContent] = useState("");
   const { setShowProfileDialog, showProfileDialog } = useDialogStore();
+  const { toast } = useToast();
+
+  console.log("isWalletConnected", isWalletConnected);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -127,14 +125,16 @@ export default function SocialMediaApp({
     fetchPosts();
   }, []);
 
-  const createPost = async () => {
+  // TODO(Pratik): Need to add the toast notification for the post creation and loading state for the button and pass this to the reply with optional parentId thing
+  const createPost = async (parentId?: string) => {
     if (newPost.trim()) {
       setIsPosting(true);
       try {
-        const hash = await addPost(newPost);
+        const hash = await addPost(newPost, parentId);
         console.log("Post added with hash:", hash);
 
         // Fetch updated posts
+        // TODO(Pratik): Use react query for all fetches and do the mutation thing here
         const fetchedPosts = await getPosts();
         const sortInMostRecent = fetchedPosts.sort(
           (a, b) =>
@@ -167,38 +167,9 @@ export default function SocialMediaApp({
     );
   };
 
-  const addReply = (postId) => {
-    if (!profile) {
-      promptProfileCreation();
-      return;
-    }
-    if (replyContent.trim()) {
-      setPosts(
-        posts.map((post) => {
-          if (post.id === postId) {
-            return {
-              ...post,
-              comments: [
-                ...post.comments,
-                {
-                  id: Date.now(),
-                  author: profile,
-                  content: replyContent,
-                },
-              ],
-            };
-          }
-          return post;
-        })
-      );
-      setReplyContent("");
-      setSelectedPost(null);
-    }
-  };
-
   const Sidebar = ({ className = "" }) => (
     <div
-      className={`bg-white shadow-md p-4 flex flex-col sticky top-0 h-screen ${className}`}
+      className={`bg-[#FAFAF8] shadow-md p-4 flex flex-col sticky top-0 h-screen ${className}`}
     >
       <div className="flex items-center gap-2 mb-8">
         {profile ? (
@@ -214,7 +185,7 @@ export default function SocialMediaApp({
           <Button
             onClick={promptProfileCreation}
             variant="outline"
-            className="w-full"
+            className="w-full bg-[#CE775A] text-[#FAFAF8] hover:bg-[#CE775A]/90"
           >
             Create Profile
           </Button>
@@ -284,10 +255,11 @@ export default function SocialMediaApp({
                 whileTap={{ scale: 0.98 }}
               >
                 <Button
-                  onClick={createPost}
+                  onClick={() => createPost()}
                   className="bg-[#CE775A] text-[#FAFAF8] hover:bg-[#CE775A]/90 transition-all duration-200 flex items-center gap-2"
                   disabled={isPosting}
                 >
+                  {/* TODO(Pratik): Need to add the loading state for the button */}
                   <span>Post</span>
                   <motion.div
                     animate={{
@@ -308,7 +280,7 @@ export default function SocialMediaApp({
 
           <div className="space-y-4">
             <AnimatePresence>
-              {initialPosts.map((post) => (
+              {posts.map((post) => (
                 <motion.div
                   key={post.id}
                   initial={{ opacity: 0, y: 50 }}
@@ -321,22 +293,22 @@ export default function SocialMediaApp({
                       <div className="flex items-center gap-4">
                         <Avatar>
                           <div className="flex h-full w-full items-center justify-center rounded-full bg-muted">
-                            <Avvvatars value={post.author.name} style="shape" />
+                            <Avvvatars value={post.Creator} style="shape" />
                           </div>
                         </Avatar>
                         <div>
                           <h3 className="font-semibold text-[#141414]">
                             {/* {post.author.name} */}
-                            {post.author.name.length > 10
-                              ? `${post.author.name.substring(
+                            {post.Creator.length > 10
+                              ? `${post.Creator.substring(
                                   0,
                                   7
-                                )}...${post.author.name.slice(-3)}`
-                              : post.author.name}
+                                )}...${post.Creator.slice(-3)}`
+                              : post.Creator}
                           </h3>
                           <p className="text-sm text-[#141414]/70">
-                            {new Date(post.timestamp).toLocaleDateString()} at{" "}
-                            {new Date(post.timestamp).toLocaleTimeString()}
+                            {new Date(post.CreatedAt).toLocaleDateString()} at{" "}
+                            {new Date(post.CreatedAt).toLocaleTimeString()}
                           </p>
                         </div>
                       </div>
@@ -413,7 +385,7 @@ export default function SocialMediaApp({
                             ),
                         }}
                       >
-                        {post.content}
+                        {post.Text}
                       </ReactMarkdown>
                     </CardContent>
                     <CardFooter className="flex justify-between bg-[#F1F0EA] p-2">
@@ -461,55 +433,12 @@ export default function SocialMediaApp({
                         </Button>
                       </motion.div>
                     </CardFooter>
-                    {selectedPost === post.Id && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <Separator />
-                        <CardContent className="p-4">
-                          <ScrollArea className="h-40 mb-4">
-                            {/* {post.comments.map((comment) => (
-                              <div
-                                key={comment.id}
-                                className="flex items-start space-x-4 mb-4"
-                              >
-                                <Avatar>
-                                  <AvatarImage
-                                    src={comment.author.avatar}
-                                    alt={comment.author.name}
-                                  />
-                                  <AvatarFallback>
-                                    {comment.author.name[0]}
-                                  </AvatarFallback>
-                                </Avatar>
-                                <div>
-                                  <p className="font-semibold">
-                                    {comment.author.name}
-                                  </p>
-                                  <p className="text-sm text-gray-600">
-                                    {comment.content}
-                                  </p>
-                                </div>
-                              </div>
-                            ))} */}
-                          </ScrollArea>
-                          <div className="flex items-center space-x-2">
-                            <Input
-                              placeholder="Write a reply..."
-                              value={replyContent}
-                              onChange={(e) => setReplyContent(e.target.value)}
-                              className="flex-grow"
-                            />
-                            <Button onClick={() => addReply(post.Id)}>
-                              Reply
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </motion.div>
-                    )}
+                    <PostComments
+                      postId={post.Id}
+                      addReply={createPost}
+                      setNewPost={setNewPost}
+                      newPost={newPost}
+                    />
                   </Card>
                 </motion.div>
               ))}
