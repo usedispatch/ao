@@ -42,7 +42,6 @@ export function ProfileCreationDialog({
       const address = await (
         globalThis as any
       ).arweaveWallet.getActiveAddress();
-      console.log("address", address);
       const hash = await addProfile(address, displayName);
       setIsLoading(false);
 

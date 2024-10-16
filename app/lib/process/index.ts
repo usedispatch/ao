@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { dryrun, message, createDataItemSigner } from "@permaweb/aoconnect";
 
-const SPLX_LUA_AO = "lcBJ5-fjQHfz4hluSS8DlEY_Xj0MTDWwMsnVSWDMMuM";
+const SPLX_LUA_AO = "Zgzom9GbhgSre1Z4X2Eedh-L39oNNvukTyKLl_msRB8";
 
 export interface Profile {
   UserId: string;
@@ -105,7 +105,7 @@ function generateRandomString(length: number): string {
 export async function addPost(
   text: string,
   parentId?: string
-): Promise<void> {
+): Promise<Post> {
   try {
     const data = {
       Id: generateRandomString(7),
@@ -130,8 +130,10 @@ export async function addPost(
       ],
       data: JSON.stringify(data),
     });
+    return data;
   } catch (error) {
     console.log("Error in addPost", error);
+    throw error;
   }
 }
 

@@ -31,13 +31,11 @@ async function getProfiles(): Promise<Profile[]> {
       },
     ],
   });
-  console.log(JSON.parse(dryrunResult.Messages[0].Data));
   return JSON.parse(dryrunResult.Messages[0].Data);
 }
 
 export default async function ProfilesPage() {
   const profiles = await getProfiles();
-  console.log(profiles);
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">User Profiles</h1>

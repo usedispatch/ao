@@ -38,7 +38,6 @@ export default function Home() {
   };
 
   const handleConnectWallet = async () => {
-    console.log("Connecting wallet");
     const connected = await connectArConnectWallet();
     setIsConnected(connected);
   };

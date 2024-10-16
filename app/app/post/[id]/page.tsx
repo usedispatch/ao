@@ -26,7 +26,6 @@ export default function SinglePostPage() {
   const [isConnected, setIsConnected] = useState(false);
   const { profile, setProfile } = useProfile();
   const handleConnectWallet = async () => {
-    console.log("Connecting wallet");
     const connected = await connectArConnectWallet();
     setIsConnected(connected);
   };

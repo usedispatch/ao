@@ -71,7 +71,6 @@ export default function SocialMediaApp({
   const { toast } = useToast();
   const { setShowProfileDialog, showProfileDialog } = useDialogStore();
 
-  console.log("isWalletConnected", isWalletConnected);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -88,21 +87,20 @@ export default function SocialMediaApp({
     if (text.trim()) {
       setIsPosting(true);
       try {
-        const hash = await addPost(text, parentId);
-        console.log("Post added with hash:", hash);
+        const newPost = await addPost(text, parentId) as Post;
 
         // Create a new post object
-        const newPost: Post = {
-          Id: "test",
-          Text: text,
-          Creator: profile?.DisplayName || "Anonymous", // Use the profile name if available
-          CreatedAt: new Date().toISOString(),
-          ParentId: parentId || undefined,
-          Cid: "",
-          ReplyCid: "",
-          ReplyUri: "",
-          Likes: 0
-        };
+        // const newPost: Post = {
+        //   Id: "test",
+        //   Text: text,
+        //   Creator: profile?.DisplayName || "Anonymous", // Use the profile name if available
+        //   CreatedAt: new Date().toISOString(),
+        //   ParentId: parentId || undefined,
+        //   Cid: "",
+        //   ReplyCid: "",
+        //   ReplyUri: "",
+        //   Likes: 0
+        // };
 
         // Update the posts state
         setPosts((prevPosts) => {
@@ -193,7 +191,7 @@ export default function SocialMediaApp({
                 whileTap={{ scale: 0.98 }}
               >
                 <Button
-                  onClick={() => createPost(newPost)}
+                  onClick={() => !profile ? promptProfileCreation() : createPost(newPost)}
                   className="bg-[#CE775A] text-[#FAFAF8] hover:bg-[#CE775A]/90 transition-all duration-200 flex items-center gap-2"
                   disabled={isPosting}
                 >

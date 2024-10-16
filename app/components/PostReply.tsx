@@ -21,7 +21,6 @@ const PostComments: React.FC<PostCommentsProps> = ({ postId, addReply }) => {
   //   console.log("error", error);
   const replies = posts?.filter((post) => post.ParentId === postId);
 
-  console.log("replies", replies);
 
   return (
     <motion.div
