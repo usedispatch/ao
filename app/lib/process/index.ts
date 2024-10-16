@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { dryrun, message, createDataItemSigner } from "@permaweb/aoconnect";
 
-const SPLX_LUA_AO = "Jp72YrAFtQNxYTmKDiUge5NkVtW-SS44cEpXdgMs8tg";
+const SPLX_LUA_AO = "lcBJ5-fjQHfz4hluSS8DlEY_Xj0MTDWwMsnVSWDMMuM";
 
 export interface Profile {
   UserId: string;
@@ -10,7 +10,7 @@ export interface Profile {
 
 //TODO(Pratik): Made this optional for backward compatible
 export interface Post {
-  Id?: string;
+  Id: string;
   Text: string;
   Cid: string;
   ReplyCid: string;
@@ -18,7 +18,7 @@ export interface Post {
   CreatedAt: string;
   Creator: string;
   ParentId?: string;
-  Likes?: number;
+  Likes: number;
 }
 
 export async function getProfiles(): Promise<Profile[]> {

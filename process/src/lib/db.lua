@@ -43,6 +43,8 @@ end
 
 
 function addProfile(data)
+  print(data.UserId)
+  print(data.DisplayName)
   DbAdmin:apply('INSERT INTO Profiles (UserId, DisplayName) VALUES (?, ?)', {
     data.UserId,
     data.DisplayName

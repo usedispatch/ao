@@ -18,5 +18,22 @@ myTests:add("Create and Get Profile", function()
     local expectedProfile = "[{\"UserId\":\"" .. userId .. "\",\"DisplayName\":\"" .. displayName .. "\"}]"
     assert(string.find(getProfile, expectedProfile) ~= nil, "GetProfiles action failed to include the newly added data")
 end)
+myTests:add("Create and Get Post",
+function ()
+    local userId = "test" .. math.random(1, 1000)
+    local displayName = "test" .. math.random(1, 1000)
+    local Text = "this si the post text"
+    local Cid = ""
+    local ReplyCid = ""
+    local ReplyUri = ""
+    local CreatedAt = ""
+    local Creator = ""
+    local ParentId = "ParentId"
+    local Likes = 0
+    local addPost = Send({Target = ao.id, Action = "AddPost", Data = "{\"Id\":\"" .. userId .. "\", \"Text\":\"" .. Text .. "\", \"Cid\":\"" .. Cid .. "\", \"ReplyCid\":\"" .. ReplyCid .. "\", \"ReplyUri\":\"" .. ReplyUri .. "\", \"CreatedAt\":\"" .. CreatedAt .. "\", \"Creator\":\"" .. Creator .. "\", \"ParentId\":\"" .. ParentId .. "\", \"Likes\":\"" .. Likes .. "\"}"}).receive()
+    local getPost = Send({Target = ao.id, Action = "GetPosts"}).receive().Data
+    -- local expectedProfile = "[{\"UserId\":\"" .. userId .. "\",\"DisplayName\":\"" .. displayName .. "\"}]"
+    -- assert(string.find(getProfile, expectedProfile) ~= nil, "GetProfiles action failed to include the newly added data")
+end)
 
 -- myTests:run()

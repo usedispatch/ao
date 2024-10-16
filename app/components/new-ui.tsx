@@ -43,6 +43,7 @@ import Avvvatars from "avvvatars-react";
 import dynamic from "next/dynamic";
 import { useToast } from "@/hooks/use-toast";
 import PostComments from "./PostReply";
+import { truncateAddress } from "@/lib/utils";
 
 const EditorComp = dynamic(() => import("./EditorComponent"), { ssr: false });
 
@@ -104,7 +105,7 @@ export default function SocialMediaApp({
   const [posts, setPosts] = useState<Post[]>([]);
   const [newPost, setNewPost] = useState("");
   const [isPosting, setIsPosting] = useState(false);
-  const [selectedPost, setSelectedPost] = useState(null);
+  const [selectedPost, setSelectedPost] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState("");
   const { setShowProfileDialog, showProfileDialog } = useDialogStore();
   const { toast } = useToast();
@@ -126,11 +127,11 @@ export default function SocialMediaApp({
   }, []);
 
   // TODO(Pratik): Need to add the toast notification for the post creation and loading state for the button and pass this to the reply with optional parentId thing
-  const createPost = async (parentId?: string) => {
-    if (newPost.trim()) {
+  const createPost = async (text: string, parentId?: string) => {
+    if (text.trim()) {
       setIsPosting(true);
       try {
-        const hash = await addPost(newPost, parentId);
+        const hash = await addPost(text, parentId);
         console.log("Post added with hash:", hash);
 
         // Fetch updated posts
@@ -255,7 +256,7 @@ export default function SocialMediaApp({
                 whileTap={{ scale: 0.98 }}
               >
                 <Button
-                  onClick={() => createPost()}
+                  onClick={() => createPost(newPost)}
                   className="bg-[#CE775A] text-[#FAFAF8] hover:bg-[#CE775A]/90 transition-all duration-200 flex items-center gap-2"
                   disabled={isPosting}
                 >
@@ -277,12 +278,12 @@ export default function SocialMediaApp({
               </motion.div>
             </CardContent>
           </Card>
-
+          {/* TODO(Pratik): Need to add the loading state for the posts */}
           <div className="space-y-4">
             <AnimatePresence>
               {posts.map((post) => (
                 <motion.div
-                  key={post.id}
+                  key={post.Id}
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -50 }}
@@ -299,12 +300,7 @@ export default function SocialMediaApp({
                         <div>
                           <h3 className="font-semibold text-[#141414]">
                             {/* {post.author.name} */}
-                            {post.Creator.length > 10
-                              ? `${post.Creator.substring(
-                                  0,
-                                  7
-                                )}...${post.Creator.slice(-3)}`
-                              : post.Creator}
+                            {truncateAddress(post.Creator)}
                           </h3>
                           <p className="text-sm text-[#141414]/70">
                             {new Date(post.CreatedAt).toLocaleDateString()} at{" "}
@@ -411,12 +407,19 @@ export default function SocialMediaApp({
                           variant="ghost"
                           size="sm"
                           onClick={() =>
-                            profile ? () => {} : promptProfileCreation()
+                            profile
+                              ? setSelectedPost(
+                                  selectedPost === post.Id ? null : post.Id
+                                )
+                              : promptProfileCreation()
                           }
                           className="text-[#141414] hover:bg-[#FAFAF8] transition-colors duration-200"
                         >
                           <MessageCircle className="w-4 h-4 mr-2" />
-                          {/* {post.comments.length} */}0
+                          {
+                            posts.filter((post) => post.ParentId === post.Id)
+                              .length
+                          }
                         </Button>
                       </motion.div>
                       <motion.div
@@ -433,12 +436,9 @@ export default function SocialMediaApp({
                         </Button>
                       </motion.div>
                     </CardFooter>
-                    <PostComments
-                      postId={post.Id}
-                      addReply={createPost}
-                      setNewPost={setNewPost}
-                      newPost={newPost}
-                    />
+                    {selectedPost === post.Id && (
+                      <PostComments postId={post.Id} addReply={createPost} />
+                    )}
                   </Card>
                 </motion.div>
               ))}
