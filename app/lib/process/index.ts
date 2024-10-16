@@ -19,6 +19,7 @@ export interface Post {
   Creator: string;
   ParentId?: string;
   Likes: number;
+  Replies?: Array<Post>;
 }
 
 export async function getProfiles(): Promise<Profile[]> {
@@ -104,7 +105,7 @@ function generateRandomString(length: number): string {
 export async function addPost(
   text: string,
   parentId?: string
-): Promise<string> {
+): Promise<void> {
   try {
     const data = {
       Id: generateRandomString(7),
@@ -129,11 +130,8 @@ export async function addPost(
       ],
       data: JSON.stringify(data),
     });
-    console.log("Result", res);
-    return res;
   } catch (error) {
     console.log("Error in addPost", error);
-    return "";
   }
 }
 

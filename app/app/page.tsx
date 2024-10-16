@@ -43,11 +43,6 @@ export default function Home() {
     setIsConnected(connected);
   };
 
-  const handleAddProfile = async () => {
-    console.log("Adding profile");
-    await addProfile("123", "John Doe");
-    setHasProfile(true);
-  };
 
   return (
     <div className=" mx-auto ">
