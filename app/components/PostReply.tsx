@@ -32,6 +32,7 @@ const PostComments: React.FC<PostCommentsProps> = ({ postId, addReply }) => {
     >
       <Separator />
       <CardContent className="p-4">
+        {/* TODO(Pratik): Need to add the loading state for the posts */}
         {replies && (
           <ScrollArea className="h-40 mb-4">
             {replies?.map((reply) => (
