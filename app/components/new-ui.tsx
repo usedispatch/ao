@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import ReactConfetti from "react-confetti";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+
 import {
   Card,
   CardHeader,
@@ -16,6 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ReactMarkdown from "react-markdown";
+
 import {
   Dialog,
   DialogContent,
@@ -156,16 +158,8 @@ export default function SocialMediaApp({
     setShowProfileDialog(true);
   };
 
-  const likePost = (id) => {
-    if (!profile) {
-      promptProfileCreation();
-      return;
-    }
-    setPosts(
-      posts.map((post) =>
-        post.id === id ? { ...post, likes: post.likes + 1 } : post
-      )
-    );
+  const likePost = (id: string) => {
+    console.log("likePost", id);
   };
 
   const Sidebar = ({ className = "" }) => (
@@ -367,18 +361,12 @@ export default function SocialMediaApp({
                               className="border-l-4 border-[#CE775A] pl-4 italic my-4"
                             />
                           ),
-                          code: ({ node, inline, ...props }) =>
-                            inline ? (
-                              <code
-                                {...props}
-                                className="bg-[#F1F0EA] rounded px-1"
-                              />
-                            ) : (
-                              <code
-                                {...props}
-                                className="block bg-[#F1F0EA] rounded p-2 my-2 whitespace-pre-wrap"
-                              />
-                            ),
+                          code: ({ node, ...props }) => (
+                            <code
+                              {...props}
+                              className="block bg-[#F1F0EA] rounded p-2 my-2 whitespace-pre-wrap"
+                            />
+                          ),
                         }}
                       >
                         {post.Text}
