@@ -33,7 +33,10 @@ export async function getProfiles(): Promise<Profile[]> {
         },
       ],
     });
-    console.log(JSON.parse(dryrunResult.Messages[0].Data));
+    console.log(
+      "GetProfiles function",
+      JSON.parse(dryrunResult.Messages[0].Data)
+    );
     return JSON.parse(dryrunResult.Messages[0].Data);
   } catch (error) {
     console.log("Error in getProfiles", error);
@@ -102,10 +105,7 @@ function generateRandomString(length: number): string {
   return result;
 }
 
-export async function addPost(
-  text: string,
-  parentId?: string
-): Promise<Post> {
+export async function addPost(text: string, parentId?: string): Promise<Post> {
   try {
     const data = {
       Id: generateRandomString(7),

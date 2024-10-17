@@ -42,40 +42,12 @@ export default function Home() {
     setIsConnected(connected);
   };
 
-
   return (
     <div className=" mx-auto ">
-      {/* <h1 className="text-3xl font-bold mb-6">Welcome to the Permaweb</h1>
-      {!isConnected && (
-        <Button onClick={handleConnectWallet}>Connect Wallet</Button>
-      )}
-      {isConnected && !hasProfile && (
-        <Button onClick={handleAddProfile}>Create Profile</Button>
-      )}
-      {isConnected && hasProfile && (
-        <>
-          <CreatePost />
-        </>
-      )}
-      <PostFeed /> */}
-      {/* <SocialMediaApp />
-       */}
       <SocialMediaApp
         isWalletConnected={isConnected}
         handleConnectWallet={handleConnectWallet}
       />
-
-      {/* {isProfileCreated ? (
-        <SocialMediaApp />
-      ) : (
-        <div className="flex justify-center items-center ">
-          <CreateProfile
-            isWalletConnected={isConnected}
-            handleConnectWallet={handleConnectWallet}
-            setIsProfileCreated={setIsProfileCreated}
-          />
-        </div>
-      )} */}
       <Toaster />
     </div>
   );

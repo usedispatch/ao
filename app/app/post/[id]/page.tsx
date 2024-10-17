@@ -1,8 +1,14 @@
- "use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { Post, getPosts, addPost, connectArConnectWallet, Profile } from "@/lib/process";
+import {
+  Post,
+  getPosts,
+  addPost,
+  connectArConnectWallet,
+  Profile,
+} from "@/lib/process";
 import { PostCard } from "@/components/PostCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -73,24 +79,24 @@ export default function SinglePostPage() {
             Cid: "",
             ReplyCid: "",
             ReplyUri: "",
-            Likes: 0
+            Likes: 0,
           });
-        } else  {
-        const foundParent = post?.Replies?.find((p) => p.Id === parentId);
-        if (foundParent) {
-          foundParent.Replies?.push({
-            Id: "newReply",
-            Text: newReply,
-            Creator: profile?.DisplayName || "Anonymous",
-            CreatedAt: new Date().toISOString(),
-            ParentId: parentId,
-            Cid: "",
-            ReplyCid: "",
-            ReplyUri: "",
-            Likes: 0
-          });
-        }
-        setPost(post);
+        } else {
+          const foundParent = post?.Replies?.find((p) => p.Id === parentId);
+          if (foundParent) {
+            foundParent.Replies?.push({
+              Id: "newReply",
+              Text: newReply,
+              Creator: profile?.DisplayName || "Anonymous",
+              CreatedAt: new Date().toISOString(),
+              ParentId: parentId,
+              Cid: "",
+              ReplyCid: "",
+              ReplyUri: "",
+              Likes: 0,
+            });
+          }
+          setPost(post);
         }
       } catch (error) {
         console.error("Error creating reply:", error);
@@ -115,18 +121,16 @@ export default function SinglePostPage() {
 
   return (
     <div className=" mx-auto ">
-
-    <div className="min-h-screen bg-[#F1F0EA] font-sans flex flex-col md:flex-row">
-    <Sidebar/>
-    <div className="flex-1 p-4 overflow-y-auto">
-
-      <PostCard
-        post={post}
-        createPost={createReply}
-        likePost={() => {}}
-        profile={null}
-      />
-      {/* <Card className="mt-4">
+      <div className="min-h-screen bg-[#F1F0EA] font-sans flex flex-col md:flex-row">
+        <Sidebar />
+        <div className="flex-1 p-4 overflow-y-auto">
+          <PostCard
+            post={post}
+            createPost={createReply}
+            likePost={() => {}}
+            profile={null}
+          />
+          {/* <Card className="mt-4">
         <CardContent className="p-4">
           <Textarea
             placeholder="Write a reply..."
@@ -152,9 +156,9 @@ export default function SinglePostPage() {
           </motion.div>
         </CardContent>
       </Card> */}
-    </div>
-    </div>
-    <Toaster />
+        </div>
+      </div>
+      <Toaster />
       {/* Profile Creation Dialog */}
       <ProfileCreationDialog
         handleConnectWallet={handleConnectWallet}

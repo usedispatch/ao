@@ -7,11 +7,12 @@ import { useDialogStore } from "@/hooks/useProfileDialog";
 import { useProfile } from "./ProfileProvider";
 import Link from "next/link";
 
-export const Sidebar = ({ className = ""  }: { className?: string }) => {
-    const { setShowProfileDialog, showProfileDialog } = useDialogStore();
-    const { profile } = useProfile();
+export const Sidebar = ({ className = "" }: { className?: string }) => {
+  const { setShowProfileDialog, showProfileDialog } = useDialogStore();
+  const { profile } = useProfile();
 
-    return (<div
+  return (
+    <div
       className={`bg-[#FAFAF8] shadow-md p-4 flex flex-col sticky top-0 h-screen hidden md:flex w-64 shadow-md`}
     >
       <div className="flex items-center gap-2 mb-8">
@@ -35,15 +36,14 @@ export const Sidebar = ({ className = ""  }: { className?: string }) => {
         )}
       </div>
       <nav className="space-y-2">
-          <Link href="/">
-        <Button variant="ghost" className="w-full justify-start">
+        <Link href="/">
+          <Button variant="ghost" className="w-full justify-start">
             <Home className="mr-2 h-4 w-4" />
             Home
-        </Button>
+          </Button>
         </Link>
         <Button variant="ghost" className="w-full justify-start">
           <User className="mr-2 h-4 w-4" />
-          
           Profile
         </Button>
         <Button variant="ghost" className="w-full justify-start">
