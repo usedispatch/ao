@@ -1,55 +1,54 @@
 "use client";
 
-import { useState, useEffect, Key } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import ReactConfetti from "react-confetti";
+import { AnimatePresence, motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-
+import {
+  Bell,
+  Heart,
+  Home,
+  Menu,
+  MessageCircle,
+  MoreHorizontal,
+  Send,
+  Settings,
+  Share2,
+  User,
+} from "lucide-react";
 import {
   Card,
-  CardHeader,
   CardContent,
   CardFooter,
+  CardHeader,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import ReactMarkdown from "react-markdown";
-
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
+import { Key, useEffect, useState } from "react";
+import { Post, Profile, addPost, getPosts, likePost, unlikePost } from "@/lib/process";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  MessageCircle,
-  Heart,
-  Share2,
-  MoreHorizontal,
-  Send,
-  Home,
-  User,
-  Bell,
-  Settings,
-  Menu,
-} from "lucide-react";
-import { ProfileCreationDialog } from "./ProfileDialog";
-import { useDialogStore } from "@/hooks/useProfileDialog";
-import { addPost, addProfile, getPosts, Post, Profile } from "@/lib/process";
-import Avvvatars from "avvvatars-react";
-import dynamic from "next/dynamic";
-import { useToast } from "@/hooks/use-toast";
-import PostComments from "./PostReply";
 import { createThreadedPosts, truncateAddress } from "@/lib/utils";
+
+import Avvvatars from "avvvatars-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import Link from 'next/link';
-import { Sidebar } from "./Sidebar";
-import { useProfile } from "./ProfileProvider";
 import { PostCard } from "./PostCard";
+import PostComments from "./PostReply";
+import { ProfileCreationDialog } from "./ProfileDialog";
+import ReactConfetti from "react-confetti";
+import ReactMarkdown from "react-markdown";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Sidebar } from "./Sidebar";
+import { Textarea } from "@/components/ui/textarea";
+import dynamic from "next/dynamic";
+import { useDialogStore } from "@/hooks/useProfileDialog";
+import { useProfile } from "./ProfileProvider";
+import { useToast } from "@/hooks/use-toast";
 
 const EditorComp = dynamic(() => import("./EditorComponent"), { ssr: false });
 
@@ -143,8 +142,42 @@ export default function SocialMediaApp({
     setShowProfileDialog(true);
   };
 
-  const likePost = (id: string) => {
-    console.log("likePost", id);
+  const handleLike = async (postId: string) => {
+    if (!profile) {
+      promptProfileCreation();
+      return;
+    }
+    try {
+      await likePost(postId);
+      setPosts(
+        posts.map((post) =>
+          post.Id === postId
+            ? { ...post, Likes: post.Likes ? post.Likes + 1 : 1 }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  };
+
+  const handleUnlike = async (postId: string) => {
+    if (!profile) {
+      promptProfileCreation();
+      return;
+    }
+    try {
+      await unlikePost(postId);
+      setPosts(
+        posts.map((post) =>
+          post.Id === postId
+            ? { ...post, Likes: post.Likes ? post.Likes - 1 : 0 }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error("Error unliking post:", error);
+    }
   };
 
 
@@ -227,7 +260,8 @@ export default function SocialMediaApp({
                   <PostCard
                     post={post}
                     createPost={createPost}
-                    likePost={likePost}
+                    handleLike={handleLike}
+                    handleUnlike={handleUnlike}
                     profile={profile}
                   />
                 </motion.div>
