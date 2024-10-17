@@ -46,13 +46,38 @@ import dynamic from "next/dynamic";
 import { useToast } from "@/hooks/use-toast";
 import PostComments from "./PostReply";
 import { createThreadedPosts, truncateAddress } from "@/lib/utils";
-import Link from 'next/link';
+import Link from "next/link";
 import { Sidebar } from "./Sidebar";
 import { useProfile } from "./ProfileProvider";
 import { PostCard } from "./PostCard";
+import { Skeleton } from "./ui/skeleton";
+import { useFetchPosts } from "@/hooks/useFetchPosts";
 
 const EditorComp = dynamic(() => import("./EditorComponent"), { ssr: false });
 
+const PostSkeleton = () => (
+  <Card className="overflow-hidden bg-[#FAFAF8] shadow-sm hover:shadow-md transition-shadow duration-200">
+    <CardHeader className="flex flex-row items-center justify-between bg-[#F1F0EA] p-4">
+      <div className="flex items-center gap-4">
+        <Skeleton className="w-10 h-10 rounded-full" />
+        <div>
+          <Skeleton className="h-4 w-24 mb-2" />
+          <Skeleton className="h-3 w-16" />
+        </div>
+      </div>
+      <Skeleton className="w-8 h-8 rounded-full" />
+    </CardHeader>
+    <CardContent className="p-4">
+      <Skeleton className="h-4 w-full mb-2" />
+      <Skeleton className="h-4 w-3/4" />
+    </CardContent>
+    <CardFooter className="flex justify-between bg-[#F1F0EA] p-2">
+      <Skeleton className="w-16 h-8 rounded" />
+      <Skeleton className="w-16 h-8 rounded" />
+      <Skeleton className="w-16 h-8 rounded" />
+    </CardFooter>
+  </Card>
+);
 
 type SocialMediaAppProps = {
   isWalletConnected: boolean;
@@ -70,24 +95,18 @@ export default function SocialMediaApp({
   const [isPosting, setIsPosting] = useState(false);
   const { toast } = useToast();
   const { setShowProfileDialog, showProfileDialog } = useDialogStore();
-
-
+  const { data, isLoading } = useFetchPosts();
   useEffect(() => {
-    const fetchPosts = async () => {
-      const fetchedPosts = await getPosts();
-      const threaded = createThreadedPosts(fetchedPosts);
-      setPosts(threaded);
-    };
-    fetchPosts();
-  }, []);
-
-
+    if (data) {
+      setPosts(data);
+    }
+  }, [data]);
 
   const createPost = async (text: string, parentId?: string) => {
     if (text.trim()) {
       setIsPosting(true);
       try {
-        const newPost = await addPost(text, parentId) as Post;
+        const newPost = (await addPost(text, parentId)) as Post;
 
         // Create a new post object
         // const newPost: Post = {
@@ -128,12 +147,19 @@ export default function SocialMediaApp({
   };
 
   // Helper function to update posts with a new reply
-  const updatePostsWithReply = (posts: Post[], parentId: string, newReply: Post): Post[] => {
-    return posts.map(post => {
+  const updatePostsWithReply = (
+    posts: Post[],
+    parentId: string,
+    newReply: Post
+  ): Post[] => {
+    return posts.map((post) => {
       if (post.Id === parentId) {
         return { ...post, Replies: [newReply, ...(post.Replies || [])] };
       } else if (post.Replies && post.Replies.length > 0) {
-        return { ...post, Replies: updatePostsWithReply(post.Replies, parentId, newReply) };
+        return {
+          ...post,
+          Replies: updatePostsWithReply(post.Replies, parentId, newReply),
+        };
       }
       return post;
     });
@@ -146,7 +172,6 @@ export default function SocialMediaApp({
   const likePost = (id: string) => {
     console.log("likePost", id);
   };
-
 
   return (
     <div className="min-h-screen bg-[#F1F0EA] font-sans flex flex-col md:flex-row">
@@ -167,7 +192,7 @@ export default function SocialMediaApp({
         </Sheet>
       </header>
 
-      {/* Sidebar for desktop */} 
+      {/* Sidebar for desktop */}
       <Sidebar />
 
       {/* Main Content */}
@@ -191,7 +216,9 @@ export default function SocialMediaApp({
                 whileTap={{ scale: 0.98 }}
               >
                 <Button
-                  onClick={() => !profile ? promptProfileCreation() : createPost(newPost)}
+                  onClick={() =>
+                    !profile ? promptProfileCreation() : createPost(newPost)
+                  }
                   className="bg-[#CE775A] text-[#FAFAF8] hover:bg-[#CE775A]/90 transition-all duration-200 flex items-center gap-2"
                   disabled={isPosting}
                 >
@@ -216,22 +243,30 @@ export default function SocialMediaApp({
           {/* TODO(Pratik): Need to add the loading state for the posts */}
           <div className="space-y-4">
             <AnimatePresence>
-              {posts.map((post) => (
-                <motion.div
-                  key={post.Id}
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -50 }}
-                  transition={{ type: "spring", stiffness: 100 }}
-                >
-                  <PostCard
-                    post={post}
-                    createPost={createPost}
-                    likePost={likePost}
-                    profile={profile}
-                  />
-                </motion.div>
-              ))}
+              {isLoading ? (
+                <div>
+                  <PostSkeleton />
+                  <PostSkeleton />
+                  <PostSkeleton />
+                </div>
+              ) : (
+                posts.map((post) => (
+                  <motion.div
+                    key={post.Id}
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -50 }}
+                    transition={{ type: "spring", stiffness: 100 }}
+                  >
+                    <PostCard
+                      post={post}
+                      createPost={createPost}
+                      likePost={likePost}
+                      profile={profile}
+                    />
+                  </motion.div>
+                ))
+              )}
             </AnimatePresence>
           </div>
         </motion.div>
