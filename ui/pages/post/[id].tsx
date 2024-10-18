@@ -1,13 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
-import {
-  Post,
-  getPosts,
-  addPost,
-  connectArConnectWallet,
-} from "@/lib/process";
+import { Post, getPosts, addPost, connectArConnectWallet } from "@/lib/process";
 import { PostCard } from "@/components/PostCard";
 import { useToast } from "@/hooks/use-toast";
 import { Sidebar } from "@/components/Sidebar";
@@ -15,30 +9,42 @@ import { Toaster } from "@/components/ui/toaster";
 import { ProfileCreationDialog } from "@/components/ProfileDialog";
 import { createThreadedPosts } from "@/lib/utils";
 import { useProfile } from "@/components/ProfileProvider";
+import { useParams } from "@/arnext";
 
 interface SinglePostPageParams {
-  id: string
+  id?: string;
+  post?: Post;
 }
 
-const fetchPost = async (id: string, setPost?: any) => {
+const fetchPost = async (id: string, setPost?: any): Promise<Post | null> => {
   try {
     const posts = await getPosts();
     const threadedPosts = createThreadedPosts(posts);
     const foundPost = threadedPosts.find((p) => p.Id === id);
-    // if (foundPost) {
-    //   foundPost.Replies = posts.filter((p) => p.ParentId === foundPost.Id);
-    // }
-    if (setPost) {
-    setPost(foundPost || null);
+    if (foundPost) {
+      foundPost.Replies = posts.filter((p) => p.ParentId === foundPost.Id);
     }
+    if (setPost) {
+      console.log("setting post", foundPost);
+      setPost(foundPost || null);
+    }
+    console.log("foundPost", foundPost);
+    return foundPost;
   } catch (error) {
     console.error("Error fetching post:", error);
+    return null;
   }
 };
 
-export default function SinglePostPage(params: SinglePostPageParams) {
-  const id = params.id;
-  const [post, setPost] = useState<Post | null>(null);
+export default function SinglePostPage({
+  _post = undefined,
+}: {
+  _post?: Post | undefined;
+}) {
+  const params = useParams();
+  console.log('params', params, _post)
+  const id = params?.id as string | undefined;
+  const [post, setPost] = useState<Post | undefined>(_post);
   const [isLoading, setIsLoading] = useState(true);
   const [isReplying, setIsReplying] = useState(false);
   const { toast } = useToast();
@@ -51,9 +57,23 @@ export default function SinglePostPage(params: SinglePostPageParams) {
   };
 
   useEffect(() => {
-    if (id) {
-      fetchPost(id, setPost);
-    }
+    (async () => {
+      try {
+        const posts = await getPosts();
+        const threadedPosts = createThreadedPosts(posts);
+        const foundPost = threadedPosts.find((p) => p.Id === id);
+        if (foundPost) {
+          foundPost.Replies = posts.filter((p) => p.ParentId === foundPost.Id);
+        }
+
+        console.log("foundPost",foundPost, posts, threadedPosts);
+        setPost(foundPost || null);
+        return foundPost;
+      } catch (error) {
+        console.error("Error fetching post:", error);
+        return null;
+      }
+    })();
   }, [id]);
 
   const createReply = async (newReply: string, parentId?: string) => {
@@ -108,25 +128,29 @@ export default function SinglePostPage(params: SinglePostPageParams) {
     }
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (!post) {
-    return <div>Post not found</div>;
-  }
+  // if (!post) {
+  //   return <div>Post not found</div>;
+  // }
 
   return (
     <div className=" mx-auto ">
       <div className="min-h-screen bg-[#F1F0EA] font-sans flex flex-col md:flex-row">
         <Sidebar />
         <div className="flex-1 p-4 overflow-y-auto">
-          <PostCard
-            post={post}
-            createPost={createReply}
-            likePost={() => {}}
-            profile={null}
-          />
+          {post ? (
+            <PostCard
+              post={post}
+              createPost={createReply}
+              likePost={() => {}}
+              profile={null}
+            />
+          ) : (
+            <></>
+          )}
         </div>
       </div>
       <Toaster />
@@ -141,17 +165,16 @@ export default function SinglePostPage(params: SinglePostPageParams) {
   );
 }
 
-export async function getStaticProps(params: SinglePostPageParams) {
-  const posts = fetchPost(params.id)
-  return { props: { posts: posts ?? [] } };
+export async function getStaticProps(params: { params: { id: string } }) {
+  const post = await fetchPost(params.params.id);
+  return { props: { post: post ?? [] } };
 }
 
 export async function getStaticPaths() {
-    const posts = await getPosts()
-    const paths = posts.map((post) => ({
-        params: { id: post.Id.toString() },
-    }))
+  // const posts = await getPosts()
+  // const paths = posts.map((post) => ({
+  //     params: { id: post.Id.toString() },
+  // }))
 
-    return { paths, fallback: 'blocking' }
+  return { paths: [], fallback: "blocking" };
 }
-

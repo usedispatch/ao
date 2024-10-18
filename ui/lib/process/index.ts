@@ -46,7 +46,6 @@ export async function getProfiles(): Promise<Profile[]> {
 
 export async function getPosts(): Promise<Post[]> {
   try {
-    console.log("Getting Posts");
     const dryrunResult = await dryrun({
       process: SPLX_LUA_AO,
       tags: [
@@ -56,7 +55,6 @@ export async function getPosts(): Promise<Post[]> {
         },
       ],
     });
-    console.log(JSON.parse(dryrunResult.Messages[0].Data));
     return JSON.parse(dryrunResult.Messages[0].Data);
   } catch (error) {
     console.log("Error in getPosts", error);
