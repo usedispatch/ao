@@ -15,18 +15,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  MessageCircle,
-  Heart,
-  Share2,
-  MoreHorizontal,
-  Send,
-  Home,
-  User,
-  Bell,
-  Settings,
-  Menu,
-} from "lucide-react";
+import { Send, Menu } from "lucide-react";
 import { ProfileCreationDialog } from "./ProfileDialog";
 import { useDialogStore } from "@/hooks/useProfileDialog";
 import { addPost, addProfile, getPosts, Post, Profile } from "@/lib/process";
@@ -35,36 +24,12 @@ import dynamic from "next/dynamic";
 import { useToast } from "@/hooks/use-toast";
 
 import { Sidebar } from "./Sidebar";
-import { useProfile } from "../lib/ProfileProvider";
 import { PostCard } from "./PostCard";
 import { Skeleton } from "./ui/skeleton";
 import { useFetchPosts } from "@/hooks/useFetchPosts";
+import PostSkeleton from "./PostSkeleton";
 
 const EditorComp = dynamic(() => import("./EditorComponent"), { ssr: false });
-
-const PostSkeleton = () => (
-  <Card className="overflow-hidden bg-[#FAFAF8] shadow-sm hover:shadow-md transition-shadow duration-200">
-    <CardHeader className="flex flex-row items-center justify-between bg-[#F1F0EA] p-4">
-      <div className="flex items-center gap-4">
-        <Skeleton className="w-10 h-10 rounded-full" />
-        <div>
-          <Skeleton className="h-4 w-24 mb-2" />
-          <Skeleton className="h-3 w-16" />
-        </div>
-      </div>
-      <Skeleton className="w-8 h-8 rounded-full" />
-    </CardHeader>
-    <CardContent className="p-4">
-      <Skeleton className="h-4 w-full mb-2" />
-      <Skeleton className="h-4 w-3/4" />
-    </CardContent>
-    <CardFooter className="flex justify-between bg-[#F1F0EA] p-2">
-      <Skeleton className="w-16 h-8 rounded" />
-      <Skeleton className="w-16 h-8 rounded" />
-      <Skeleton className="w-16 h-8 rounded" />
-    </CardFooter>
-  </Card>
-);
 
 type SocialMediaAppProps = {
   isWalletConnected: boolean;
@@ -82,6 +47,7 @@ export default function SocialMediaApp({
   const [isPosting, setIsPosting] = useState(false);
   const { toast } = useToast();
   const { setShowProfileDialog, showProfileDialog } = useDialogStore();
+
   const { data, isLoading } = useFetchPosts();
   useEffect(() => {
     if (data) {

@@ -29,6 +29,7 @@ export const PostCard = ({
   likePost,
 }: PostCardProps) => {
   const [isReplying, setIsReplying] = useState(false);
+  const [like, setLike] = useState<number>(post.Likes);
   const [replyContent, setReplyContent] = useState("");
   const profile = useProfile();
   const { data: profiles } = useFetchProfiles();
@@ -130,11 +131,11 @@ export const PostCard = ({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => likePost(post.Id)}
+            onClick={() => setLike(1)}
             className="text-[#141414] hover:bg-[#FAFAF8] transition-colors duration-200"
           >
             <Heart className="w-4 h-4 mr-2" />
-            {post.Likes}
+            {like}
           </Button>
         </motion.div>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
