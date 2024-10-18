@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { isArweave } from "@/arnext";
 import { Providers } from "@/lib/providers";
+import "../styles/globals.css";
 export default function App({
   Component,
   pageProps,
