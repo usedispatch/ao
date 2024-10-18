@@ -12,19 +12,8 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import ReactMarkdown from "react-markdown";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   MessageCircle,
@@ -41,14 +30,12 @@ import {
 import { ProfileCreationDialog } from "./ProfileDialog";
 import { useDialogStore } from "@/hooks/useProfileDialog";
 import { addPost, addProfile, getPosts, Post, Profile } from "@/lib/process";
-import Avvvatars from "avvvatars-react";
+
 import dynamic from "next/dynamic";
 import { useToast } from "@/hooks/use-toast";
-import PostComments from "./PostReply";
-import { createThreadedPosts, truncateAddress } from "@/lib/utils";
-import Link from "next/link";
+
 import { Sidebar } from "./Sidebar";
-import { useProfile } from "./ProfileProvider";
+import { useProfile } from "../lib/ProfileProvider";
 import { PostCard } from "./PostCard";
 import { Skeleton } from "./ui/skeleton";
 import { useFetchPosts } from "@/hooks/useFetchPosts";

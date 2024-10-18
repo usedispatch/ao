@@ -4,8 +4,9 @@ import Avvvatars from "avvvatars-react";
 import { Home, User, Bell, Settings } from "lucide-react";
 import { Button } from "./ui/button";
 import { useDialogStore } from "@/hooks/useProfileDialog";
-import { useProfile } from "./ProfileProvider";
+
 import Link from "next/link";
+import { useProfile } from "@/hooks/useProfile";
 
 export const Sidebar = ({ className = "" }: { className?: string }) => {
   const { setShowProfileDialog, showProfileDialog } = useDialogStore();
@@ -13,7 +14,7 @@ export const Sidebar = ({ className = "" }: { className?: string }) => {
 
   return (
     <div
-      className={`bg-[#FAFAF8] shadow-md p-4 flex flex-col sticky top-0 h-screen hidden md:flex w-64 shadow-md`}
+      className={`bg-[#FAFAF8] shadow-md p-4 flex flex-col sticky top-0 h-screen  md:flex w-64 `}
     >
       <div className="flex items-center gap-2 mb-8">
         {profile ? (

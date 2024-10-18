@@ -20,7 +20,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { Toaster } from "@/components/ui/toaster";
 import { ProfileCreationDialog } from "@/components/ProfileDialog";
 import { createThreadedPosts } from "@/lib/utils";
-import { useProfile } from "@/components/ProfileProvider";
+import { useProfile } from "@/hooks/useProfile";
 
 export default function SinglePostPage() {
   const { id } = useParams();
