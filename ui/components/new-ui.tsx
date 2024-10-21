@@ -13,19 +13,17 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  Send,
-  Menu,
-} from "lucide-react";
+import { Send, Menu } from "lucide-react";
 import { ProfileCreationDialog } from "./ProfileDialog";
 import { useDialogStore } from "@/hooks/useProfileDialog";
-import { addPost, Post, Profile } from "@/lib/process";
+import { addPost, connectArConnectWallet, Post, Profile } from "@/lib/process";
 import dynamic from "next/dynamic";
 import { useToast } from "@/hooks/use-toast";
 import { Sidebar } from "./Sidebar";
 import { PostCard } from "./PostCard";
 import { Skeleton } from "./ui/skeleton";
-import { useFetchPosts } from "@/hooks/useFetchPosts";
+import { fetchPosts, useFetchPosts } from "@/hooks/useFetchPosts";
+import { useProfile } from "./ProfileProvider";
 
 const EditorComp = dynamic(() => import("./EditorComponent"), { ssr: false });
 
@@ -53,28 +51,47 @@ const PostSkeleton = () => (
   </Card>
 );
 
-type SocialMediaAppProps = {
-  isWalletConnected: boolean;
-  handleConnectWallet: () => void;
-};
-
 export default function SocialMediaApp({
-  isWalletConnected,
-  handleConnectWallet,
-}: SocialMediaAppProps) {
-  const [profile, setProfile] = useState<Profile | null>(null);
+  _posts = undefined,
+}: {
+  _posts?: Post[] | undefined;
+}) {
   const [showConfetti, setShowConfetti] = useState(false);
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<Post[]>(_posts ?? []);
   const [newPost, setNewPost] = useState("");
   const [isPosting, setIsPosting] = useState(false);
   const { toast } = useToast();
   const { setShowProfileDialog, showProfileDialog } = useDialogStore();
   const { data, isLoading } = useFetchPosts();
+  const [isConnected, setIsConnected] = useState(false);
+  const { profile, setProfile } = useProfile();
+
   useEffect(() => {
     if (data) {
       setPosts(data);
     }
   }, [data]);
+
+  useEffect(() => {
+    checkWalletConnection();
+  }, []);
+
+  const checkWalletConnection = async () => {
+    try {
+      const address = await (
+        globalThis as any
+      ).arweaveWallet.getActiveAddress();
+      setIsConnected(!!address);
+    } catch (error) {
+      console.error(error);
+      setIsConnected(false);
+    }
+  };
+
+  const handleConnectWallet = async () => {
+    const connected = await connectArConnectWallet();
+    setIsConnected(connected);
+  };
 
   const createPost = async (text: string, parentId?: string) => {
     if (text.trim()) {
@@ -249,10 +266,11 @@ export default function SocialMediaApp({
       {/* Profile Creation Dialog */}
       <ProfileCreationDialog
         handleConnectWallet={handleConnectWallet}
-        isWalletConnected={isWalletConnected}
+        isWalletConnected={isConnected}
         setProfile={setProfile}
         setShowConfetti={setShowConfetti}
       />
     </div>
   );
 }
+

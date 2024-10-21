@@ -1,8 +1,8 @@
-import { getPosts } from "@/lib/process";
+import { getPosts, Post } from "@/lib/process";
 import { createThreadedPosts } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 
-const fetchPosts = async () => {
+export const fetchPosts = async (): Promise<Post[]> => {
   const fetchedPosts = await getPosts();
   return createThreadedPosts(fetchedPosts);
 };

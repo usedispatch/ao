@@ -171,10 +171,6 @@ export async function getStaticProps(params: { params: { id: string } }) {
 }
 
 export async function getStaticPaths() {
-  // const posts = await getPosts()
-  // const paths = posts.map((post) => ({
-  //     params: { id: post.Id.toString() },
-  // }))
 
   return { paths: [], fallback: "blocking" };
 }
