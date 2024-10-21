@@ -18,7 +18,7 @@ export default function App({
       import("react-router-dom").then((module) => {
         setRouterComponent(() => module.BrowserRouter);
       });
-      import("../components/ArweaveRoutes").then((module) => {
+      import("../components-1/ArweaveRoutes").then((module) => {
         setArweaveRoutes(() => module.default);
       });
     }

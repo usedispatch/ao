@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { Post, getPosts, addPost, connectArConnectWallet } from "@/lib/process";
-import { PostCard } from "@/components/PostCard";
+import { PostCard } from "@/components-1/PostCard";
 import { useToast } from "@/hooks/use-toast";
-import { Sidebar } from "@/components/Sidebar";
-import { Toaster } from "@/components/ui/toaster";
-import { ProfileCreationDialog } from "@/components/ProfileDialog";
+import { Sidebar } from "@/components-1/Sidebar";
+import { Toaster } from "@/components-1/ui/toaster";
+import { ProfileCreationDialog } from "@/components-1/ProfileDialog";
 import { createThreadedPosts } from "@/lib/utils";
-import { useProfile } from "@/components/ProfileProvider";
+import { useProfile } from "@/components-1/ProfileProvider";
 import { useParams } from "@/arnext";
 
 interface SinglePostPageParams {

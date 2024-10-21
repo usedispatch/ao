@@ -1,59 +1,97 @@
 "use client";
 
-import { useState, useEffect, Key } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import ReactConfetti from "react-confetti";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components-1/ui/button";
 
 import {
   Card,
   CardHeader,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/components-1/ui/card";
+import { Textarea } from "@/components-1/ui/textarea";
 
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components-1/ui/sheet";
 import { Send, Menu } from "lucide-react";
 import { ProfileCreationDialog } from "./ProfileDialog";
 import { useDialogStore } from "@/hooks/useProfileDialog";
-import { addPost, addProfile, getPosts, Post, Profile } from "@/lib/process";
-
+import { addPost, connectArConnectWallet, Post, Profile } from "@/lib/process";
 import dynamic from "next/dynamic";
 import { useToast } from "@/hooks/use-toast";
-
 import { Sidebar } from "./Sidebar";
 import { PostCard } from "./PostCard";
 import { Skeleton } from "./ui/skeleton";
-import { useFetchPosts } from "@/hooks/useFetchPosts";
-import PostSkeleton from "./PostSkeleton";
+import { fetchPosts, useFetchPosts } from "@/hooks/useFetchPosts";
+import { useProfile } from "./ProfileProvider";
 
 const EditorComp = dynamic(() => import("./EditorComponent"), { ssr: false });
 
-type SocialMediaAppProps = {
-  isWalletConnected: boolean;
-  handleConnectWallet: () => void;
-};
+const PostSkeleton = () => (
+  <Card className="overflow-hidden bg-[#FAFAF8] shadow-sm hover:shadow-md transition-shadow duration-200">
+    <CardHeader className="flex flex-row items-center justify-between bg-[#F1F0EA] p-4">
+      <div className="flex items-center gap-4">
+        <Skeleton className="w-10 h-10 rounded-full" />
+        <div>
+          <Skeleton className="h-4 w-24 mb-2" />
+          <Skeleton className="h-3 w-16" />
+        </div>
+      </div>
+      <Skeleton className="w-8 h-8 rounded-full" />
+    </CardHeader>
+    <CardContent className="p-4">
+      <Skeleton className="h-4 w-full mb-2" />
+      <Skeleton className="h-4 w-3/4" />
+    </CardContent>
+    <CardFooter className="flex justify-between bg-[#F1F0EA] p-2">
+      <Skeleton className="w-16 h-8 rounded" />
+      <Skeleton className="w-16 h-8 rounded" />
+      <Skeleton className="w-16 h-8 rounded" />
+    </CardFooter>
+  </Card>
+);
 
 export default function SocialMediaApp({
-  isWalletConnected,
-  handleConnectWallet,
-}: SocialMediaAppProps) {
-  const [profile, setProfile] = useState<Profile | null>(null);
+  _posts = undefined,
+}: {
+  _posts?: Post[] | undefined;
+}) {
   const [showConfetti, setShowConfetti] = useState(false);
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<Post[]>(_posts ?? []);
   const [newPost, setNewPost] = useState("");
   const [isPosting, setIsPosting] = useState(false);
   const { toast } = useToast();
   const { setShowProfileDialog, showProfileDialog } = useDialogStore();
-
   const { data, isLoading } = useFetchPosts();
+  const [isConnected, setIsConnected] = useState(false);
+  const { profile, setProfile } = useProfile();
+
   useEffect(() => {
     if (data) {
       setPosts(data);
     }
   }, [data]);
+
+  useEffect(() => {
+    checkWalletConnection();
+  }, []);
+
+  const checkWalletConnection = async () => {
+    try {
+      const address = await (
+        globalThis as any
+      ).arweaveWallet.getActiveAddress();
+      setIsConnected(!!address);
+    } catch (error) {
+      console.error(error);
+      setIsConnected(false);
+    }
+  };
+
+  const handleConnectWallet = async () => {
+    const connected = await connectArConnectWallet();
+    setIsConnected(connected);
+  };
 
   const createPost = async (text: string, parentId?: string) => {
     if (text.trim()) {
@@ -228,10 +266,11 @@ export default function SocialMediaApp({
       {/* Profile Creation Dialog */}
       <ProfileCreationDialog
         handleConnectWallet={handleConnectWallet}
-        isWalletConnected={isWalletConnected}
+        isWalletConnected={isConnected}
         setProfile={setProfile}
         setShowConfetti={setShowConfetti}
       />
     </div>
   );
 }
+
