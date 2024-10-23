@@ -5,7 +5,7 @@ import { Home, User, Bell, Settings } from "lucide-react";
 import { Button } from "./ui/button";
 import { useDialogStore } from "@/hooks/useProfileDialog";
 
-import Link from "next/link";
+import { Link } from "@/arnext";
 import { useProfile } from "@/hooks/useProfile";
 
 export const Sidebar = ({ className = "" }: { className?: string }) => {
@@ -37,7 +37,7 @@ export const Sidebar = ({ className = "" }: { className?: string }) => {
         )}
       </div>
       <nav className="space-y-2">
-        <Link href="/">
+        <Link to="/" href="/">
           <Button variant="ghost" className="w-full justify-start">
             <Home className="mr-2 h-4 w-4" />
             Home
