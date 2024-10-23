@@ -1,9 +1,9 @@
 import Image from "next/image";
 import localFont from "next/font/local";
-import SocialMediaApp from "@/components-1/new-ui";
+import SocialMediaApp from "@/components/new-ui";
 import { fetchPosts } from "@/hooks/useFetchPosts";
 import { Post } from "@/lib/process";
-import { Toaster } from "@/components-1/ui/toaster";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

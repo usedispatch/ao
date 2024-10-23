@@ -18,7 +18,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Send, Menu } from "lucide-react";
 import { ProfileCreationDialog } from "./ProfileDialog";
 import { useDialogStore } from "@/hooks/useProfileDialog";
-import { addPost, addProfile, getPosts, Post, Profile } from "@/lib/process";
+import { addPost, addProfile, connectArConnectWallet, getPosts, Post, Profile } from "@/lib/process";
 
 import dynamic from "next/dynamic";
 import { useToast } from "@/hooks/use-toast";
@@ -28,6 +28,7 @@ import { PostCard } from "./PostCard";
 import { Skeleton } from "./ui/skeleton";
 import { useFetchPosts } from "@/hooks/useFetchPosts";
 import PostSkeleton from "./PostSkeleton";
+import { useProfile } from "@/hooks/useProfile";
 
 const EditorComp = dynamic(() => import("./EditorComponent"), { ssr: false });
 
@@ -37,17 +38,19 @@ type SocialMediaAppProps = {
 };
 
 export default function SocialMediaApp({
-  isWalletConnected,
-  handleConnectWallet,
-}: SocialMediaAppProps) {
-  const [profile, setProfile] = useState<Profile | null>(null);
+  _posts = undefined,
+}: {
+  _posts?: Post[] | undefined;
+}) {
   const [showConfetti, setShowConfetti] = useState(false);
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<Post[]>(_posts ?? []);
   const [newPost, setNewPost] = useState("");
   const [isPosting, setIsPosting] = useState(false);
   const { toast } = useToast();
   const { setShowProfileDialog, showProfileDialog } = useDialogStore();
-
+  const [isConnected, setIsConnected] = useState(false);
+  const { profile, setProfile } = useProfile();
+  
   const { data, isLoading } = useFetchPosts();
   useEffect(() => {
     if (data) {
@@ -125,6 +128,12 @@ export default function SocialMediaApp({
   const likePost = (id: string) => {
     console.log("likePost", id);
   };
+
+  const handleConnectWallet = async () => {
+    const connected = await connectArConnectWallet();
+    setIsConnected(connected);
+  };
+
 
   return (
     <div className="min-h-screen bg-[#F1F0EA] font-sans flex flex-col md:flex-row">
@@ -228,7 +237,7 @@ export default function SocialMediaApp({
       {/* Profile Creation Dialog */}
       <ProfileCreationDialog
         handleConnectWallet={handleConnectWallet}
-        isWalletConnected={isWalletConnected}
+        isWalletConnected={isConnected}
         setProfile={setProfile}
         setShowConfetti={setShowConfetti}
       />
