@@ -8,7 +8,7 @@ import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Card, CardHeader, CardContent, CardFooter } from "./ui/card";
 import { Textarea } from "./ui/textarea";
-import Link from "next/link";
+import { Link } from "@/arnext";
 import { Button } from "./ui/button";
 
 import { useDialogStore } from "@/hooks/useProfileDialog";
@@ -53,7 +53,11 @@ export const PostCard = ({
       }`}
     >
       <CardHeader className="flex flex-row items-center justify-between bg-[#F1F0EA] p-4">
-        <Link href={`/post/${post.Id}`} className="flex items-center gap-4">
+        <Link
+          to={`/post/${post.Id}`}
+          href={`/post/${post.Id}`}
+          className="flex items-center gap-4"
+        >
           <div className="flex items-center gap-4">
             <Avatar>
               <div className="flex h-full w-full items-center justify-center rounded-full bg-muted">
