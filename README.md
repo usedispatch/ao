@@ -45,3 +45,5 @@ It would be nice to have a type safe way to interact with the ao api.
 
 Its pretty annoying where there is some lua code error and it says `error:
 near ")": syntax error` without any indication of which file the error is in.
+
+would be nice if after making a send request in aos i could get the message hash and check it in ao.link
