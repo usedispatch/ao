@@ -1,7 +1,7 @@
-import { Profile } from "@/lib/process";
+import { connectArConnectWallet, Profile } from "@/lib/process";
 import { Avatar } from "@radix-ui/react-avatar";
 import Avvvatars from "avvvatars-react";
-import { Home, User, Bell, Settings } from "lucide-react";
+import { Home, User, Bell, Settings, LogOut } from "lucide-react";
 import { Button } from "./ui/button";
 import { useDialogStore } from "@/hooks/useProfileDialog";
 
@@ -25,10 +25,26 @@ export const Sidebar = ({ className = "" }: { className?: string }) => {
               </div>
             </Avatar>
             <span className="font-semibold">{profile.DisplayName}</span>
+            <Button
+              onClick={async () => {
+                await (globalThis as any).arweaveWallet.disconnect();
+                window.location.reload();
+              }}
+              variant="ghost"
+              className="ml-auto"
+              size="icon"
+            >
+              <LogOut className="h-4 w-4" />
+            </Button>
           </>
         ) : (
           <Button
-            onClick={() => setShowProfileDialog(true)}
+            onClick={async () => {
+              await connectArConnectWallet();
+              if (!profile) {
+                setShowProfileDialog(true);
+              }
+            }}
             variant="outline"
             className="w-full bg-[#CE775A] text-[#FAFAF8] hover:bg-[#CE775A]/90"
           >
@@ -43,18 +59,6 @@ export const Sidebar = ({ className = "" }: { className?: string }) => {
             Home
           </Button>
         </Link>
-        <Button variant="ghost" className="w-full justify-start">
-          <User className="mr-2 h-4 w-4" />
-          Profile
-        </Button>
-        <Button variant="ghost" className="w-full justify-start">
-          <Bell className="mr-2 h-4 w-4" />
-          Notifications
-        </Button>
-        <Button variant="ghost" className="w-full justify-start">
-          <Settings className="mr-2 h-4 w-4" />
-          Settings
-        </Button>
       </nav>
     </div>
   );
