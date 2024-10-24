@@ -14,3 +14,4 @@
 amalg.cache
 .vscode
 node_modules/*
+app

@@ -1,7 +1,7 @@
 import { connectArConnectWallet, Profile } from "@/lib/process";
 import { Avatar } from "@radix-ui/react-avatar";
 import Avvvatars from "avvvatars-react";
-import { Home, User, Bell, Settings, LogOut } from "lucide-react";
+import { Home, User, Bell, Settings, LogOut, UserPlus } from "lucide-react";
 import { Button } from "./ui/button";
 import { useDialogStore } from "@/hooks/useProfileDialog";
 
@@ -16,6 +16,9 @@ export const Sidebar = ({ className = "" }: { className?: string }) => {
     <div
       className={`bg-[#FAFAF8] shadow-md p-4 flex flex-col sticky top-0 h-screen  md:flex w-64 `}
     >
+      <h1 className="text-2xl font-bold text-[#CE775A] mb-6 text-center">
+        Arplex
+      </h1>
       <div className="flex items-center gap-2 mb-8">
         {profile ? (
           <>
@@ -38,18 +41,21 @@ export const Sidebar = ({ className = "" }: { className?: string }) => {
             </Button>
           </>
         ) : (
-          <Button
-            onClick={async () => {
-              await connectArConnectWallet();
-              if (!profile) {
-                setShowProfileDialog(true);
-              }
-            }}
-            variant="outline"
-            className="w-full bg-[#CE775A] text-[#FAFAF8] hover:bg-[#CE775A]/90"
-          >
-            Create Profile
-          </Button>
+          <>
+            <Button
+              onClick={async () => {
+                await connectArConnectWallet();
+                if (!profile) {
+                  setShowProfileDialog(true);
+                }
+              }}
+              variant="outline"
+              className="w-full bg-[#CE775A] text-[#FAFAF8] hover:bg-[#CE775A]/90"
+            >
+              Create Profile
+              <UserPlus className="ml-2 w-4 h-4" />
+            </Button>
+          </>
         )}
       </div>
       <nav className="space-y-2">

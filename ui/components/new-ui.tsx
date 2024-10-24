@@ -15,10 +15,17 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Send, Menu } from "lucide-react";
+import { Send, Menu, UserPlus } from "lucide-react";
 import { ProfileCreationDialog } from "./ProfileDialog";
 import { useDialogStore } from "@/hooks/useProfileDialog";
-import { addPost, addProfile, connectArConnectWallet, getPosts, Post, Profile } from "@/lib/process";
+import {
+  addPost,
+  addProfile,
+  connectArConnectWallet,
+  getPosts,
+  Post,
+  Profile,
+} from "@/lib/process";
 
 import dynamic from "next/dynamic";
 import { useToast } from "@/hooks/use-toast";
@@ -29,6 +36,12 @@ import { Skeleton } from "./ui/skeleton";
 import { useFetchPosts } from "@/hooks/useFetchPosts";
 import PostSkeleton from "./PostSkeleton";
 import { useProfile } from "@/hooks/useProfile";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const EditorComp = dynamic(() => import("./EditorComponent"), { ssr: false });
 
@@ -50,7 +63,7 @@ export default function SocialMediaApp({
   const { setShowProfileDialog, showProfileDialog } = useDialogStore();
   const [isConnected, setIsConnected] = useState(false);
   const { profile, setProfile } = useProfile();
-  
+
   const { data, isLoading } = useFetchPosts();
   useEffect(() => {
     if (data) {
@@ -134,7 +147,6 @@ export default function SocialMediaApp({
     setIsConnected(connected);
   };
 
-
   return (
     <div className="min-h-screen bg-[#F1F0EA] font-sans flex flex-col md:flex-row">
       {/* {showConfetti && <ReactConfetti recycle={false} />} */}
@@ -173,6 +185,7 @@ export default function SocialMediaApp({
                 onChange={(e) => setNewPost(e.target.value)}
                 className="mb-4 border-[#CE775A] focus:border-[#CE775A] focus:ring focus:ring-[#CE775A]/20 transition-all duration-200 bg-[#FAFAF8] text-[#141414]"
               />
+
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -184,25 +197,34 @@ export default function SocialMediaApp({
                   className="bg-[#CE775A] text-[#FAFAF8] hover:bg-[#CE775A]/90 transition-all duration-200 flex items-center gap-2"
                   disabled={isPosting}
                 >
-                  {/* TODO(Pratik): Need to add the loading state for the button */}
-                  <span>Post</span>
-                  <motion.div
-                    animate={{
-                      x: isPosting ? [0, 5, 0] : 0,
-                    }}
-                    transition={{
-                      duration: 0.5,
-                      repeat: isPosting ? Infinity : 0,
-                      repeatType: "loop",
-                    }}
-                  >
-                    <Send className="w-4 h-4" />
-                  </motion.div>
+                  {!profile ? (
+                    <>
+                      <span>Create Profile</span>
+                      <UserPlus className="w-4 h-4" />
+                    </>
+                  ) : (
+                    <>
+                      <span>Post</span>
+
+                      <motion.div
+                        animate={{
+                          x: isPosting ? [0, 5, 0] : 0,
+                        }}
+                        transition={{
+                          duration: 0.5,
+                          repeat: isPosting ? Infinity : 0,
+                          repeatType: "loop",
+                        }}
+                      >
+                        <Send className="w-4 h-4" />
+                      </motion.div>
+                    </>
+                  )}
                 </Button>
               </motion.div>
             </CardContent>
           </Card>
-          {/* TODO(Pratik): Need to add the loading state for the posts */}
+
           <div className="space-y-4">
             <AnimatePresence>
               {isLoading ? (
