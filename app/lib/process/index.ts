@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createDataItemSigner, dryrun, message } from "@permaweb/aoconnect";
+import { dryrun, message, createDataItemSigner } from "@permaweb/aoconnect";
 
 const SPLX_LUA_AO = "Zgzom9GbhgSre1Z4X2Eedh-L39oNNvukTyKLl_msRB8";
 
@@ -133,54 +133,6 @@ export async function addPost(
     return data;
   } catch (error) {
     console.log("Error in addPost", error);
-    throw error;
-  }
-}
-
-export async function likePost(postId: string): Promise<void> {
-  try {
-    const data = {
-      Id: postId,
-    };
-    console.log("Sending Message", data);
-    const res = await message({
-      process: SPLX_LUA_AO,
-      signer: createDataItemSigner((globalThis as any).arweaveWallet),
-      tags: [
-        {
-          name: "Action",
-          value: "LikePost",
-        },
-      ],
-      data: JSON.stringify(data),
-    });
-    console.log("Result", res);
-  } catch (error) {
-    console.log("Error in likePost", error);
-    throw error;
-  }
-}
-
-export async function unlikePost(postId: string): Promise<void> {
-  try {
-    const data = {
-      Id: postId,
-    };
-    console.log("Sending Message", data);
-    const res = await message({
-      process: SPLX_LUA_AO,
-      signer: createDataItemSigner((globalThis as any).arweaveWallet),
-      tags: [
-        {
-          name: "Action",
-          value: "UnlikePost",
-        },
-      ],
-      data: JSON.stringify(data),
-    });
-    console.log("Result", res);
-  } catch (error) {
-    console.log("Error in unlikePost", error);
     throw error;
   }
 }
