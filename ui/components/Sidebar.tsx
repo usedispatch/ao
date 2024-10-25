@@ -1,16 +1,26 @@
 import { connectArConnectWallet, Profile } from "@/lib/process";
 import { Avatar } from "@radix-ui/react-avatar";
 import Avvvatars from "avvvatars-react";
-import { Home, User, Bell, Settings, LogOut, UserPlus } from "lucide-react";
+import {
+  Home,
+  User,
+  Bell,
+  Settings,
+  LogOut,
+  UserPlus,
+  Wallet,
+} from "lucide-react";
 import { Button } from "./ui/button";
 import { useDialogStore } from "@/hooks/useProfileDialog";
 
 import { Link } from "@/arnext";
 import { useProfile } from "@/hooks/useProfile";
+import { useEffect, useState } from "react";
 
 export const Sidebar = ({ className = "" }: { className?: string }) => {
+  const [address, setAddress] = useState<string | null>(null);
   const { setShowProfileDialog, showProfileDialog } = useDialogStore();
-  const { profile } = useProfile();
+  const { profile, isLoading } = useProfile(!!address);
 
   return (
     <div
@@ -42,19 +52,38 @@ export const Sidebar = ({ className = "" }: { className?: string }) => {
           </>
         ) : (
           <>
-            <Button
-              onClick={async () => {
-                await connectArConnectWallet();
-                if (!profile) {
-                  setShowProfileDialog(true);
-                }
-              }}
-              variant="outline"
-              className="w-full bg-[#CE775A] text-[#FAFAF8] hover:bg-[#CE775A]/90"
-            >
-              Create Profile
-              <UserPlus className="ml-2 w-4 h-4" />
-            </Button>
+            {!address ? (
+              <Button
+                onClick={async () => {
+                  const response = await connectArConnectWallet();
+                  if (response) {
+                    const address = await (
+                      globalThis as any
+                    ).arweaveWallet.getActiveAddress();
+
+                    setAddress(address);
+                  }
+                }}
+                variant="outline"
+                className="w-full bg-[#CE775A] text-[#FAFAF8] hover:bg-[#CE775A]/90"
+              >
+                Connect Wallet
+                <Wallet className="ml-2 w-4 h-4" />
+              </Button>
+            ) : (
+              <Button
+                onClick={async () => {
+                  if (!profile || !isLoading) {
+                    setShowProfileDialog(true);
+                  }
+                }}
+                variant="outline"
+                className="w-full bg-[#CE775A] text-[#FAFAF8] hover:bg-[#CE775A]/90"
+              >
+                Create Profile
+                <UserPlus className="ml-2 w-4 h-4" />
+              </Button>
+            )}
           </>
         )}
       </div>

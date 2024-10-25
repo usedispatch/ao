@@ -15,15 +15,11 @@ import { ToastAction } from "./ui/toast";
 import Spinner from "./Spinner";
 
 type ProfileCreationDialogProps = {
-  isWalletConnected: boolean;
-  handleConnectWallet: () => void;
   setProfile: (value: SetStateAction<any>) => void;
   setShowConfetti: (value: SetStateAction<boolean>) => void;
 };
 
 export function ProfileCreationDialog({
-  isWalletConnected,
-  handleConnectWallet,
   setProfile,
   setShowConfetti,
 }: ProfileCreationDialogProps) {
@@ -34,10 +30,6 @@ export function ProfileCreationDialog({
 
   const createProfileHandler = async () => {
     try {
-      if (!isWalletConnected) {
-        handleConnectWallet();
-        return;
-      }
       setIsLoading(true);
       const address = await (
         globalThis as any
@@ -94,15 +86,7 @@ export function ProfileCreationDialog({
             onClick={createProfileHandler}
             className="bg-[#CE775A] text-[#FAFAF8] hover:bg-[#CE775A]/90"
           >
-            {isWalletConnected ? (
-              isLoading ? (
-                <Spinner />
-              ) : (
-                "Create Profile"
-              )
-            ) : (
-              "Connect Wallet"
-            )}
+            {isLoading ? <Spinner /> : "Create Profile"}
           </Button>
         </div>
       </DialogContent>

@@ -143,6 +143,7 @@ export default function SocialMediaApp({
   };
 
   const handleConnectWallet = async () => {
+    console.log("handleConnectWallet");
     const connected = await connectArConnectWallet();
     setIsConnected(connected);
   };
@@ -258,8 +259,6 @@ export default function SocialMediaApp({
 
       {/* Profile Creation Dialog */}
       <ProfileCreationDialog
-        handleConnectWallet={handleConnectWallet}
-        isWalletConnected={isConnected}
         setProfile={setProfile}
         setShowConfetti={setShowConfetti}
       />

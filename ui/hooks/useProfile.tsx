@@ -14,25 +14,34 @@ export const useProfileStore = create<ProfileState>((set) => ({
   setProfile: (profile) => set({ profile }),
 }));
 
-export const useProfile = () => {
-  const { data: profiles } = useFetchProfiles();
+export const useProfile = (mutate: boolean = false) => {
+  const { data: profiles, isLoading } = useFetchProfiles();
   const { profile, setProfile } = useProfileStore();
 
-  const { data: connectedAddress } = useQuery({
-    queryKey: ["connectedAddress"],
-    queryFn: async () =>
-      await (globalThis as any).arweaveWallet.getActiveAddress(),
-  });
+  const { data: connectedAddress, isLoading: isLoadingConnectedAddress } =
+    useQuery({
+      queryKey: ["connectedAddress"],
+      queryFn: async () =>
+        await (globalThis as any).arweaveWallet.getActiveAddress(),
+    });
 
   React.useEffect(() => {
     if (profiles && connectedAddress && !profile) {
       const connectedProfile = profiles[connectedAddress];
-      console.log("Connected Profile", connectedProfile);
+
       if (connectedProfile) {
         setProfile({ UserId: connectedAddress, DisplayName: connectedProfile });
       }
     }
-  }, [profiles, connectedAddress, profile, setProfile]);
+  }, [
+    profiles,
+    connectedAddress,
+    profile,
+    setProfile,
+    isLoading,
+    mutate,
+    isLoadingConnectedAddress,
+  ]);
 
-  return { profile, setProfile };
+  return { profile, setProfile, isLoading };
 };
