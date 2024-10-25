@@ -12,7 +12,7 @@ export function truncateAddress(address: string) {
 }
 
 export function sharePost(postId: string) {
-  const url = `${window.location.origin}/post/${postId}`;
+  const url = `${window.location.href}post/${postId}`;
 
   navigator.clipboard.writeText(url).then(() => {
     alert('Link copied to clipboard!');
