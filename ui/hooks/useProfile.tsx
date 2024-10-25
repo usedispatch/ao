@@ -25,6 +25,8 @@ export const useProfile = (mutate: boolean = false) => {
         await (globalThis as any).arweaveWallet.getActiveAddress(),
     });
 
+  console.log("connectedAddress", connectedAddress);
+  console.log("isLoadingConnectedAddress", isLoadingConnectedAddress);
   React.useEffect(() => {
     if (profiles && connectedAddress && !profile) {
       const connectedProfile = profiles[connectedAddress];
