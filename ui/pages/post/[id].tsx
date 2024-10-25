@@ -42,7 +42,7 @@ export default function SinglePostPage({
   _post?: Post | undefined;
 }) {
   const params = useParams();
-  console.log('params', params, _post)
+
   const id = params?.id as string | undefined;
   const [post, setPost] = useState<Post | undefined>(_post);
   const [isLoading, setIsLoading] = useState(true);
@@ -66,7 +66,7 @@ export default function SinglePostPage({
           foundPost.Replies = posts.filter((p) => p.ParentId === foundPost.Id);
         }
 
-        console.log("foundPost",foundPost, posts, threadedPosts);
+        console.log("foundPost", foundPost, posts, threadedPosts);
         setPost(foundPost || null);
         return foundPost;
       } catch (error) {
@@ -156,8 +156,6 @@ export default function SinglePostPage({
       <Toaster />
       {/* Profile Creation Dialog */}
       <ProfileCreationDialog
-        handleConnectWallet={handleConnectWallet}
-        isWalletConnected={isConnected}
         setProfile={setProfile}
         setShowConfetti={setShowConfetti}
       />
@@ -171,6 +169,5 @@ export async function getStaticProps(params: { params: { id: string } }) {
 }
 
 export async function getStaticPaths() {
-
   return { paths: [], fallback: "blocking" };
 }
